@@ -68,6 +68,9 @@ nav#controlbar a{
 	border: 1px solid white;
 	border-radius: 3px;
 	text-decoration: none;
+	span{
+		display: none;
+	}
 }
 nav#controlbar a#settings{
 	float: right;
@@ -75,6 +78,9 @@ nav#controlbar a#settings{
 nav#controlbar a:hover{
 	background-color: white;
 	color: #1F3A93;
+	span{
+		display: inline;
+	}
 }
 select{
 	background-color: transparent;

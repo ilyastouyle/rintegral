@@ -1,14 +1,119 @@
 $(document).ready(function(){
-	var n = 10, a = -10, b = 10, p = 1, c = 0, d = 0, txs = 0, tys = 0;
-	var rectanglecolor = "#F9BF3B";
-	var curvecolor = "#F9BF3B";
+	var n = 10, a = -10, b = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0;
+	var rectanglecolor;
+	var curvecolor;
+	var curvewidth;
+	var rectanglewidth;
 	var origin = {x: 425, y: 210};
 	var expression;
 	subdivision = new Array();
 	var canvas = document.getElementById("graph");
 	var context = canvas.getContext("2d");
 	context.strokeStyle="#FFFFFF";
+	if($.cookie('curvewidth') == undefined){
+		curvewidth = 3, rectanglewidth = 2, curvecolor = "#F9BF3B", rectanglecolor = "#F9BF3B"; 
+		$.cookie('curvewidth', curvewidth, {expires: 365});
+		$.cookie('rectanglewidth', rectanglewidth, {expires: 365});
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	}
+	else{
+		curvewidth = parseInt($.cookie('curvewidth'));
+		rectanglewidth = parseInt($.cookie('rectanglewidth'));
+		curvecolor = $.cookie('curvecolor');
+		rectanglecolor = $.cookie('rectanglecolor');
+	}
+	switch(curvewidth){
+		case 2:
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.verythin").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.verythin").siblings(".thickness").removeClass("selected");
+			break;
+		case 3: 
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thin").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thin").siblings(".thickness").removeClass("selected");
+			break;
+		case 4:
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.regular").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.regular").siblings(".thickness").removeClass("selected");
+			break;
+		case 5:
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thick").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thick").siblings(".thickness").removeClass("selected");
+			break;
+	}
+	switch(curvecolor){
+		case "#000000":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").siblings(".color").removeClass("selected");
+			break;
+		case "#F22613":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").siblings(".color").removeClass("selected");
+			break;
+		case "#2C3E50":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").siblings(".color").removeClass("selected");
+			break;
+		case "#26A65B":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.eucalyptus").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.eucalyptus").siblings(".color").removeClass("selected");
+			break;
+		case "#F9690E":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.ecstasy").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.ecstasy").siblings(".color").removeClass("selected");
+			break;
+		case "#F9BF3B":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.sandstorm").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.sandstorm").siblings(".color").removeClass("selected");
+			break;
+	} 
+	switch(rectanglewidth){
+		case 1:
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.verythin").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.verythin").siblings(".thickness").removeClass("selected");
+			break;
+		case 2: 
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thin").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thin").siblings(".thickness").removeClass("selected");
+			break;
+		case 3:
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.regular").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.regular").siblings(".thickness").removeClass("selected");
+			break;
+		case 4:
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thick").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thick").siblings(".thickness").removeClass("selected");
+			break;
+	}
+	switch(rectanglecolor){
+		case "#000000":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").siblings(".color").removeClass("selected");
+			break;
+		case "#F22613":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").siblings(".color").removeClass("selected");
+			break;
+		case "#2C3E50":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").siblings(".color").removeClass("selected");
+			break;
+		case "#26A65B":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.eucalyptus").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.eucalyptus").siblings(".color").removeClass("selected");
+			break;
+		case "#F9690E":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.ecstasy").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.ecstasy").siblings(".color").removeClass("selected");
+			break;
+		case "#F9BF3B":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.sandstorm").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.sandstorm").siblings(".color").removeClass("selected");
+			break;
+	}
 	function drawYAxis(x){
+		context.beginPath();
+		context.strokeStyle="#FFFFFF";
 		context.lineWidth = 2;
 		context.moveTo(x, 0);
 		context.lineTo(x - 5, 12);
@@ -18,8 +123,11 @@ $(document).ready(function(){
 		context.lineTo(x, 420);
 		context.stroke();
 		context.lineWidth = 1;
+		context.stroke();
 	}
 	function drawXAxis(y){
+		context.beginPath();
+		context.strokeStyle="#FFFFFF";
 		context.lineWidth = 2;
 		context.moveTo(0, y);
 		context.lineTo(850, y);
@@ -29,6 +137,7 @@ $(document).ready(function(){
 		context.lineTo(838, y + 5);
 		context.stroke();
 		context.lineWidth = 1;
+		context.stroke();
 	}
 	function vdash(x, y, height){
 		context.lineWidth = 2;
@@ -121,6 +230,7 @@ $(document).ready(function(){
 		}
 	}
 	function drawOnX(x, y, xstep, m){
+		context.strokeStyle = "#FFFFFF";
 		context.beginPath();
 		for(var i = 0; i <= m+1; i++){
 			vdash(x + 19*i, y, 5);
@@ -147,6 +257,7 @@ $(document).ready(function(){
 	}
 	function drawOnY(x, y, ystep, m){
 		context.beginPath();
+		context.strokeStyle = "#FFFFFF";
 		if(ystep < (Math.exp(15))){
 			for(var i = 0; i <= m; i++){
 				hdash(x, y - 19*i, 5);
@@ -167,24 +278,25 @@ $(document).ready(function(){
 	}
 	function drawOnMinusX(x, y, xstep, m){
 		context.beginPath();
+		context.strokeStyle = "#FFFFFF";
 		for(var i = 1; i <= m + 1; i++){
 			vdash(x - 19*i, y, 5);
 			if(i != 0 && i%2 == 0){
 				if(xstep >= 50){
 					if(xstep >= 100){
 						if(xstep >= 5000){
-							context.fillText("-" + (i*xstep).toFixed(1), x - 16 - (19*i), y + 10, 34);	
+							context.fillText("-" + (i*xstep).toFixed(2), x - 16 - (19*i), y + 10, 34);	
 						}
 						else{
-							context.fillText("-" + (i*xstep).toFixed(1), x - 15 - (19*i), y + 10, 33);
+							context.fillText("-" + (i*xstep).toFixed(2), x - 15 - (19*i), y + 10, 33);
 						}
 					}
 					else{
-						context.fillText("-" + (i*xstep).toFixed(1), x - 12 - (19*i), y + 14, 27);
+						context.fillText("-" + (i*xstep).toFixed(2), x - 12 - (19*i), y + 14, 27);
 					}
 				}
 				else{
-					context.fillText("-" + (i*xstep).toFixed(1), x - 12 - (19*i), y + 14, 22);
+					context.fillText("-" + (i*xstep).toFixed(2), x - 12 - (19*i), y + 14, 22);
 				}
 			}
 		}
@@ -192,11 +304,12 @@ $(document).ready(function(){
 	}
 	function drawOnMinusY(x, y, ystep, m){
 		context.beginPath();
+		context.strokeStyle = "#FFFFFF";
 		if(ystep != Infinity){
 			for(var i = 1; i<=m; i++){
 				hdash(x, y + 19*i, 5);
 				if(i%2 == 0){
-					context.fillText(-(i*ystep).toFixed(1), x + 8, y + (19*i), 22);
+					context.fillText(-(i*ystep).toFixed(2), x + 8, y + (19*i), 22);
 				}
 			}
 		}
@@ -252,8 +365,10 @@ $(document).ready(function(){
 		context.lineTo(x, y);	
 	}
 	//For drawing the riemann rectangles
-	function drawRiemann(a, b, n, funct, xstep, ystep, originx, originy){
+	function drawRiemann(width, a, b, n, funct, xstep, ystep, originx, originy){
 		subdivision = [];
+		context.beginPath();
+		context.lineWidth = width;
 		if(n > 0){
 			subdivide(a, b, n, subdivision);
 			context.beginPath();
@@ -268,9 +383,9 @@ $(document).ready(function(){
 		}
 	}
 	//Takes the width, of the line to draw with, the table of values and their images
-	function drawCurve(width, values, images, xstep, ystep, x, y){
+	function drawCurve(width, values, images, xstep, ystep, x, y, color){
 		context.beginPath();
-		context.strokeStyle = curvecolor;
+		context.strokeStyle = color;
 		context.moveTo(x, y);
 		context.lineWidth = width;
 		if(ystep < Math.exp(12)){
@@ -287,7 +402,6 @@ $(document).ready(function(){
 		}
 		context.stroke();
 		context.lineWidth = 1;
-		context.strokeStyle = "#FFFFFF";
 	}
 	function evaluateInput(){
 		var str = ($("input#function").val()).replace(/([^\[]*)\^([^\]]*)/g, function(match, p1, p2, offset, string){return "Math.pow("+ p1.slice(0, -1 )+", "+p2.slice(1, p2.length)+")"; }).replace(/\[/g, "(").replace(/\]/g, ")");
@@ -301,20 +415,31 @@ $(document).ready(function(){
 	context.lineWidth = 1;
 	context.font = "11px sans-serif";
 	context.fillStyle = "white";
-	context.strokeStyle = "white";
-	context.beginPath();
 	var val = [], im = [];//val[] for stocking values and im[] for their images
 	var xs, ys; //xs:=xstep && ys:=ystep
+	$("input#function").focus(function(){
+		$(this).animate({
+			width: 325
+		}, 650);
+	});
+	$("input#function").blur(function(){
+		$(this).animate({
+			width: 200
+		}, 650);
+	});
+	$("input").keydown(function(e){
+		if(e.which == 13){
+			$("a#plot").click();
+		}
+	});
 	$("a#plot").click(function(){
+		$("canvas#graph").focus();
 		expression = evaluateInput();
-		c = 0, d = 0, p = 1;
+		c = 0, e = 0, p = 1;
 		origin.x = 425;
 		origin.y = 210;
 		n = 0, val = [], im=[];
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		val = [], im=[];
 		a = eval($("input#a").val());
 		b = eval($("input#b").val());
@@ -333,33 +458,33 @@ $(document).ready(function(){
 			tys = ys/2;
 			origin.x = 425;
 			origin.y = 400;
+			context.clearRect(0, 0, 850, 420);
+			drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+			drawRiemann(rectanglewidth, a, b, n, function(x){
+				return eval(expression);
+			}, txs, tys, origin.x, origin.y);
 			drawXAxis(origin.y);	
 			drawYAxis(origin.x);
 			drawOnY(origin.x, origin.y, tys, 22);
-			drawCurve(3, val, im, xs, tys, origin.x, origin.y);
-			drawOnX(origin.x, origin.y, xs, 22);
-			drawOnMinusX(origin.x, origin.y, xs, 22);
-			drawOnMinusY(origin.x, origin.y, ys, 22);
-			drawRiemann(a, b, n, function(x){
-				return eval(expression);
-			}, xs, tys, origin.x, origin.y);
+			drawOnX(origin.x, origin.y, txs, 22);
+			drawOnMinusX(origin.x, origin.y, txs, 22);
+			drawOnMinusY(origin.x, origin.y, tys, 22);
 		}
 		else{
 			origin.x = 425;
 			origin.y = 210;
-			drawXAxis(origin.y);	
-			drawYAxis(origin.x);
-			drawOnX(origin.x, origin.y, xs, 22);
-			drawOnY(origin.x, origin.y, ys, 22);
-			drawOnMinusX(origin.x, origin.y,xs, 22);
-			drawOnMinusY(origin.x, origin.y,ys, 22);
-			drawCurve(3, val, im, xs, ys, origin.x, origin.y);
-			drawRiemann(a, b, n, function(x){
+			context.clearRect(0, 0, 850, 420);
+			drawCurve(curvewidth, val, im, xs, ys, origin.x, origin.y, curvecolor);
+			drawRiemann(rectanglewidth, a, b, n, function(x){
 				return eval(expression);
 			}, xs, ys, origin.x, origin.y);
+			drawOnX(origin.x, origin.y, xs, 22);
+			drawOnY(origin.x, origin.y, ys, 22);
+			drawXAxis(origin.y);	
+			drawYAxis(origin.x);
+			drawOnMinusX(origin.x, origin.y,xs, 22);
+			drawOnMinusY(origin.x, origin.y,ys, 22);
 		}
-		context.lineWidth = 1;
-		context.stroke();
 	});
 	$("a#zoomin").click(function(){
 		if(p < 10 && p >= 1){
@@ -374,24 +499,22 @@ $(document).ready(function(){
 		tys = ys/p;
 		im = []; val = [];
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("a#zoomout").click(function(){
 		if(p > 0.2 && p <= 1){
@@ -406,122 +529,115 @@ $(document).ready(function(){
 		tys = ys/p;
 		im = []; val = [];
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("a#go-left").click(function(){
 		c -= 2;
 		im = []; val = [];
 		origin.x += 38;
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("a#go-right").click(function(){
 		c += 2;
 		im = []; val = [];
 		origin.x -= 38;
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("a#go-up").click(function(){
-		d += 2;
+		e += 2;
 		im = []; val = [];
 		origin.y += 38;
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("a#go-down").click(function(){
-		d -= 2;
+		e -= 2;
 		im = []; val = [];
 		origin.y -= 38;
 		context.clearRect(0, 0, 850, 420);
-		context.beginPath();
-		context.clearRect(0, 0, 850, 420);
-		context.strokeStyle = "white";
 		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		drawXAxis(origin.y);	
-		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + d);
-		drawCurve(3, val, im, txs, tys, origin.x, origin.y);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - d);
-		drawRiemann(a, b, n, function(x){
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);
+		drawYAxis(origin.x);
+		drawOnY(origin.x, origin.y, tys, 24 + e);
+		drawOnX(origin.x, origin.y, txs, 24 + c);
+		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
+		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
 	});
 	$("canvas#graph").keydown(function(e){
+		if(e.which == 32){
+			$("a#center").click();
+		}
 		if(e.which == 37){
 			$("a#go-left").click();
 		}
@@ -536,6 +652,137 @@ $(document).ready(function(){
 			$("a#go-down").click();
 			e.preventDefault();
 		}
+		if(e.which == 73){
+			$("a#zoomin").click();
+			e.preventDefault();
+		}
+		if(e.which == 79){
+			$("a#zoomout").click();
+			e.preventDefault();
+		}
+		if(e.which == 67){
+			$("a#center").click();
+			e.preventDefault();
+		}
+	});
+	$("a#center").click(function(){
+		c = 0, e = 0;
+		origin.x = 425;
+		origin.y = 210;
+		val = [], im=[];
+		context.clearRect(0, 0, 850, 420);
+		subdivide(24*txs, -24*txs, 1200, val);
+		for(var i = 0; i<val.length; i++){
+			var x = val[i];
+			im[i] = eval(expression);
+		}
+		context.clearRect(0, 0, 850, 420);
+		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		drawRiemann(rectanglewidth, a, b, n, function(x){
+			return eval(expression);
+		}, txs, tys, origin.x, origin.y);
+		drawXAxis(origin.y);	
+		drawYAxis(origin.x);
+		drawOnX(origin.x, origin.y, txs, 22);
+		drawOnY(origin.x, origin.y, tys, 22);
+		drawOnMinusX(origin.x, origin.y, txs, 22);
+		drawOnMinusY(origin.x, origin.y, tys, 22);
+	});
+	$("nav#controlbar a#settings").click(function(){
+		$("nav#controlbar div#settingsdiv").slideToggle(450);
+	});
+	//Curve related settings
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").click(function(){
+		curvecolor = "#000000";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").click(function(){
+		curvecolor = "#F22613";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").click(function(){
+		curvecolor = "#2C3E50";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.eucalyptus").click(function(){
+		curvecolor = "#26A65B";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.ecstasy").click(function(){
+		curvecolor = "#F9690E";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.sandstorm").click(function(){
+		curvecolor = "#F9BF3B";
+		$.cookie('curvecolor', curvecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.verythin").click(function(){
+		curvewidth = 2;
+		$.cookie('curvewidth', curvewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thin").click(function(){
+		curvewidth = 3;
+		$.cookie('curvewidth', curvewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.regular").click(function(){
+		curvewidth = 4;
+		$.cookie('curvewidth', curvewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.thick").click(function(){
+		curvewidth = 5;
+		$.cookie('curvewidth', curvewidth, {expires: 365});
+	});
+	//Rectangles related settings
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").click(function(){
+		rectanglecolor = "#000000";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").click(function(){
+		rectanglecolor = "#F22613";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").click(function(){
+		rectanglecolor = "#2C3E50";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.eucalyptus").click(function(){
+		rectanglecolor = "#26A65B";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.ecstasy").click(function(){
+		rectanglecolor = "#F9690E";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.sandstorm").click(function(){
+		rectanglecolor = "#F9BF3B";
+		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.verythin").click(function(){
+		rectanglewidth = 1;
+		$.cookie('rectanglewidth', rectanglewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thin").click(function(){
+		rectanglewidth = 2;
+		$.cookie('rectanglewidth', rectanglewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.regular").click(function(){
+		rectanglewidth = 3;
+		$.cookie('rectanglewidth', rectanglewidth, {expires: 365});
+	});
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thick").click(function(){
+		rectanglewidth = 4;
+		$.cookie('rectanglewidth', rectanglewidth, {expires: 365});
+	});
+	//Apply the new parameters before plotting
+	$("nav#controlbar div#settingsdiv table tr td a.color").click(function(){
+		$(this).addClass("selected");
+		$(this).siblings(".color").removeClass("selected");
+		$("a#plot").click();
+	});
+	$("nav#controlbar div#settingsdiv table tr td a.thickness").click(function(){
+		$(this).addClass("selected");
+		$(this).siblings(".thickness").removeClass("selected");
+		$("a#plot").click();
 	});
 });
 //Regex for replacing powers with equivalent in js
