@@ -1,15 +1,18 @@
 $(document).ready(function(){
 	var n = 10, a = -10, b = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0;
-	var rectanglecolor;
-	var curvecolor;
-	var curvewidth;
-	var rectanglewidth;
-	var origin = {x: 425, y: 210};
+	var rectanglecolor, curvecolor, curvewidth, rectanglewidth;
+	var cheight = 420, cwidth = 1200;
+	//var origin = {x: 425, y: 210};
+	var origin = {x: cwidth/2, y: cheight/2};
+	var thestep = 19;
 	var expression;
-	subdivision = new Array();
+	var subdivision = new Array();
 	var canvas = document.getElementById("graph");
+	var canvas2 = document.getElementById("toplayer");
 	var context = canvas.getContext("2d");
-	context.strokeStyle="#FFFFFF";
+	var context2 = canvas2.getContext("2d");
+	context.strokeStyle="#000000";
+	//If it's the first visit, or the cookies have been removed, setting up a new cookie 
 	if($.cookie('curvewidth') == undefined){
 		curvewidth = 3, rectanglewidth = 2, curvecolor = "#F9BF3B", rectanglecolor = "#F9BF3B"; 
 		$.cookie('curvewidth', curvewidth, {expires: 365});
@@ -42,7 +45,7 @@ $(document).ready(function(){
 			break;
 	}
 	switch(curvecolor){
-		case "#000000":
+		case "#4B77BE":
 			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").addClass("selected");
 			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").siblings(".color").removeClass("selected");
 			break;
@@ -50,9 +53,9 @@ $(document).ready(function(){
 			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").addClass("selected");
 			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").siblings(".color").removeClass("selected");
 			break;
-		case "#2C3E50":
-			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").addClass("selected");
-			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").siblings(".color").removeClass("selected");
+		case "#AEA8D3":
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.wistful").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.wistful").siblings(".color").removeClass("selected");
 			break;
 		case "#26A65B":
 			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.eucalyptus").addClass("selected");
@@ -70,7 +73,7 @@ $(document).ready(function(){
 	switch(rectanglewidth){
 		case 1:
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.verythin").addClass("selected");
-			$("nav#controlbar div#settingsdiv table tr td#curvesettings a.verythin").siblings(".thickness").removeClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.verythin").siblings(".thickness").removeClass("selected");
 			break;
 		case 2: 
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thin").addClass("selected");
@@ -86,7 +89,7 @@ $(document).ready(function(){
 			break;
 	}
 	switch(rectanglecolor){
-		case "#000000":
+		case "#4B77BE":
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").addClass("selected");
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").siblings(".color").removeClass("selected");
 			break;
@@ -94,9 +97,9 @@ $(document).ready(function(){
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").addClass("selected");
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").siblings(".color").removeClass("selected");
 			break;
-		case "#2C3E50":
-			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").addClass("selected");
-			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").siblings(".color").removeClass("selected");
+		case "#AEA8D3":
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.wistful").addClass("selected");
+			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.wistful").siblings(".color").removeClass("selected");
 			break;
 		case "#26A65B":
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.eucalyptus").addClass("selected");
@@ -113,33 +116,27 @@ $(document).ready(function(){
 	}
 	function drawYAxis(x){
 		context.beginPath();
-		context.strokeStyle="#FFFFFF";
+		context.strokeStyle="#4B77BE";
 		context.lineWidth = 2;
-		context.moveTo(x, 0);
-		context.lineTo(x - 5, 12);
-		context.moveTo(x, 0);
-		context.lineTo(x + 5, 12);
-		context.moveTo(x, 0);
-		context.lineTo(x, 420);
+		context.moveTo(x, 0);		
+		context.lineTo(x, cheight);
 		context.stroke();
 		context.lineWidth = 1;
 		context.stroke();
 	}
 	function drawXAxis(y){
 		context.beginPath();
-		context.strokeStyle="#FFFFFF";
+		context.strokeStyle="#4B77BE";
 		context.lineWidth = 2;
 		context.moveTo(0, y);
-		context.lineTo(850, y);
-		context.moveTo(850, y);
-		context.lineTo(838, y - 5);
-		context.moveTo(850, y);
-		context.lineTo(838, y + 5);
+		context.lineTo(cwidth, y);
+		context.moveTo(cwidth, y);
 		context.stroke();
 		context.lineWidth = 1;
 		context.stroke();
 	}
 	function vdash(x, y, height){
+		context.beginPath();
 		context.lineWidth = 2;
 		context.moveTo(x, y);
 		context.lineTo(x, y+height);
@@ -149,6 +146,7 @@ $(document).ready(function(){
 		context.lineWidth = 1;
 	}
 	function hdash(x, y, width){
+		context.beginPath();
 		context.lineWidth = 2;
 		context.moveTo(x, y);
 		context.lineTo(x+width, y);
@@ -230,47 +228,33 @@ $(document).ready(function(){
 		}
 	}
 	function drawOnX(x, y, xstep, m){
-		context.strokeStyle = "#FFFFFF";
+		context.strokeStyle = "#4B77BE";
 		context.beginPath();
 		for(var i = 0; i <= m+1; i++){
-			vdash(x + 19*i, y, 5);
-			if(i != 0 && i%2 == 0){
-				if(xstep >= 50){
-					if(xstep >= 100){
-						if(xstep >= 5000){
-							context.fillText((i*xstep).toFixed(2), x - 15 + (19*i), y + 14, 34);	
-						}
-						else{
-							context.fillText((i*xstep).toFixed(2), x - 14 + (19*i), y + 14, 33);
-						}
-					}
-					else{
-						context.fillText((i*xstep).toFixed(2), x - 10 + (19*i), y + 14, 27);
-					}
-				}
-				else{
-					context.fillText((i*xstep).toFixed(2), x - 7 + (19*i), y + 14, 22);
-				}
+			vdash(x + thestep*i, y, 3);
+			if(i != 0 && i%(afterComma(xstep)+beforeComma(xstep)) == 0){
+				context.fillText((i*xstep).toFixed(afterComma(xstep)), x + (thestep*i) - 8 - 3*(afterComma(xstep)), y + 14, 28 + 3*(beforeComma(xstep) + afterComma(xstep)));
 			}
 		}
 		context.stroke();
 	}
 	function drawOnY(x, y, ystep, m){
 		context.beginPath();
-		context.strokeStyle = "#FFFFFF";
+		context.strokeStyle = "#4B77BE";
 		if(ystep < (Math.exp(15))){
 			for(var i = 0; i <= m; i++){
-				hdash(x, y - 19*i, 5);
+				hdash(x, y - thestep*i, 3);
 				if(i != 0 && i%2 ==0){
-					context.fillText((i*ystep).toFixed(2), x + 10, y + 2 - (19*i), 22);
+					context.fillText((i*ystep).toFixed(afterComma(ystep)), x + 10, y + 2 - (thestep*i), 28 + 3*(beforeComma(ystep) + afterComma(ystep)));
 				}
 			}
 		}
 		else{
 			for(var i = 0; i <= m; i++){
-				hdash(x, y - 19*i, 5);
+				hdash(x, y - thestep*i, 5);
 				if(i == 10){
-					context.fillText("\u221E", x, y + 2 - (19*i), 22);
+					//Infinity
+					context.fillText("\u221E", x, y + 2 - (thestep*i), 28);
 				}
 			}
 		}
@@ -278,61 +262,42 @@ $(document).ready(function(){
 	}
 	function drawOnMinusX(x, y, xstep, m){
 		context.beginPath();
-		context.strokeStyle = "#FFFFFF";
+		context.strokeStyle = "#4B77BE";
 		for(var i = 1; i <= m + 1; i++){
-			vdash(x - 19*i, y, 5);
-			if(i != 0 && i%2 == 0){
-				if(xstep >= 50){
-					if(xstep >= 100){
-						if(xstep >= 5000){
-							context.fillText("-" + (i*xstep).toFixed(2), x - 16 - (19*i), y + 10, 34);	
-						}
-						else{
-							context.fillText("-" + (i*xstep).toFixed(2), x - 15 - (19*i), y + 10, 33);
-						}
-					}
-					else{
-						context.fillText("-" + (i*xstep).toFixed(2), x - 12 - (19*i), y + 14, 27);
-					}
-				}
-				else{
-					context.fillText("-" + (i*xstep).toFixed(2), x - 12 - (19*i), y + 14, 22);
-				}
+			vdash(x - thestep*i, y, 5);
+			if(i != 0 && i%(afterComma(xstep)+beforeComma(xstep)) == 0){
+				context.fillText("-" + (i*xstep).toFixed(afterComma(xstep)), x - 12 - (thestep*i) - 3*(afterComma(xstep)), y + 14, 28 + 3*(beforeComma(xstep) + afterComma(xstep)));
+				
 			}
 		}
 		context.stroke();
 	}
 	function drawOnMinusY(x, y, ystep, m){
 		context.beginPath();
-		context.strokeStyle = "#FFFFFF";
-		if(ystep != Infinity){
-			for(var i = 1; i<=m; i++){
-				hdash(x, y + 19*i, 5);
-				if(i%2 == 0){
-					context.fillText(-(i*ystep).toFixed(2), x + 8, y + (19*i), 22);
-				}
+		context.strokeStyle = "#4B77BE";
+		for(var i = 1; i<=m; i++){
+			hdash(x, y + thestep*i, 3);
+			if(i%2 == 0){
+				context.fillText(-(i*ystep).toFixed(afterComma(ystep)), x + 8, y + (thestep*i), 28 + 3*(beforeComma(ystep) + afterComma(ystep)));
 			}
-		}
-		else{
-
 		}
 		context.stroke();
 	}
-	//Computes the coordinates for a given point p in a axis system where xstep is the step of the xaxis and (x, y) the coordinates of the origin
+	//Computes the coordinates for a given point p in an axis system where xstep is the step of the xaxis and (x, y) the coordinates of the origin
 	function Xcoord(p, xstep, x){
 		if(p > 0){
-			return x + 19*(p/xstep);
+			return x + thestep*(p/xstep);
 		}
 		else{
-			return x - 19*(Math.abs(p)/xstep);
+			return x - thestep*(Math.abs(p)/xstep);
 		}
 	}
 	function Ycoord(p, ystep, y){
 		if(p > 0){	
-			return y - (19*(p/ystep));
+			return y - (thestep*(p/ystep));
 		}
 		else{
-			return y + (19*(Math.abs(p)/ystep));	
+			return y + (thestep*(Math.abs(p)/ystep));	
 		}
 	}
 	//Returns the maximum on a range of values
@@ -344,7 +309,7 @@ $(document).ready(function(){
 				max = values[i];
 			}
 		}
-		return max.toFixed(1);
+		return max;
 	}
 	//Returns the minimum on a range of values
 	function Minimum(values){
@@ -355,14 +320,13 @@ $(document).ready(function(){
 				min = values[i];
 			}
 		}
-		return min.toFixed(1);
+		return min;
 	}
 	function drawRect(x, y, height, width){
 		context.moveTo(x, y);
 		context.lineTo(x, y-height);
 		context.lineTo(x + width, y-height);
 		context.lineTo(x + width, y);
-		context.lineTo(x, y);	
 	}
 	//For drawing the riemann rectangles
 	function drawRiemann(width, a, b, n, funct, xstep, ystep, originx, originy){
@@ -389,9 +353,11 @@ $(document).ready(function(){
 		context.moveTo(x, y);
 		context.lineWidth = width;
 		if(ystep < Math.exp(12)){
-			for(var i = 0; i <= values.length; i++){
-				context.moveTo(Xcoord(values[i], xstep, x), Ycoord(images[i], ystep, y));
-				context.lineTo(Xcoord(values[i+1], xstep, x), Ycoord(images[i+1], ystep, y));
+			for(var i = 0; i < values.length; i++){
+				if(!isNaN(images[i])){
+					context.moveTo(Xcoord(values[i], xstep, x), Ycoord(images[i], ystep, y));
+					context.lineTo(Xcoord(values[i+1], xstep, x), Ycoord(images[i+1], ystep, y));
+				}
 			}
 		}
 		else{
@@ -412,20 +378,52 @@ $(document).ready(function(){
 		str = str.replace(/ln/g, "Math.log");
 		return str;
 	}
+	//Stay is a boolean parameter, if it is set to false then the status is shown then hidden, and if it is set to true the status stays till a next update
+	function updateStatus(string, stay){
+		$("span#status").show();
+		if(stay){
+			$("span#status").text(string);
+		}
+		else{
+			console.log(string);
+			$("span#status").text(string).slideDown(50).delay(2000).slideUp(50);
+		}
+	}
+	//Returns the number of significant numbers after the comma
+	function afterComma(x){	
+		var counter = 1;
+		while(x.toFixed(counter) != x){
+			counter++;
+		}
+		return counter;
+	}
+	function beforeComma(x){
+		var counter  = 1;
+		while(x > Math.pow(10, counter)){
+			counter++;
+		}
+		return counter;
+	}
+	function format(x){
+
+	}
 	context.lineWidth = 1;
 	context.font = "11px sans-serif";
-	context.fillStyle = "white";
-	var val = [], im = [];//val[] for stocking values and im[] for their images
+	context.fillStyle = "#000000";
+	val = [], im = [];//val[] for stocking values and im[] for their images
 	var xs, ys; //xs:=xstep && ys:=ystep
+	$("canvas#toplayer").focus(function(){
+		$("canvas#graph").focus();
+	});
 	$("input#function").focus(function(){
 		$(this).animate({
 			width: 325
-		}, 650);
+		}, 250);
 	});
 	$("input#function").blur(function(){
 		$(this).animate({
 			width: 200
-		}, 650);
+		}, 250);
 	});
 	$("input").keydown(function(e){
 		if(e.which == 13){
@@ -433,60 +431,104 @@ $(document).ready(function(){
 		}
 	});
 	$("a#plot").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		$("canvas#graph").focus();
 		expression = evaluateInput();
+		console.log("f(x) = " + expression);
 		c = 0, e = 0, p = 1;
-		origin.x = 425;
-		origin.y = 210;
+		origin.x = cwidth/2;
+		origin.y = cheight/2;
 		n = 0, val = [], im=[];
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		val = [], im=[];
 		a = eval($("input#a").val());
 		b = eval($("input#b").val());
 		n = eval($("input#n").val());
 		xs = xstep(a, b, 22);
 		txs = xs;
-		subdivide(24*xs, -24*xs, 1200, val);
-		for(var i = 0; i<val.length; i++){
+		subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1200, val);
+		for(var i = 0; i < val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}	
 		ys = ystep(Minimum(im), Maximum(im));
 		tys = ys;
-		context.clearRect(0, 0, 850, 420);
+		if(afterComma(txs) > 4){
+			if(beforeComma(txs) < 3){
+				if(beforeComma(txs) < 2){
+					txs = Number(txs.toFixed(6));
+				}
+				else{
+					txs = Number(txs.toFixed(4));
+				}
+			}
+			else{
+				txs = Number(txs.toFixed(2));
+			}
+		}
+		if(afterComma(tys) > 4){
+			if(beforeComma(tys) < 3){
+				if(beforeComma(tys) < 2){
+					tys = Number(tys.toFixed(6));
+				}
+				else{
+					tys = Number(tys.toFixed(4));
+				}
+			}
+			else{
+				tys = Number(tys.toFixed(2));
+			}
+		}
+		context.clearRect(0, 0, cwidth, cheight);
 		if(Minimum(im) >= 0){
-			tys = ys/2;
-			origin.x = 425;
-			origin.y = 400;
-			context.clearRect(0, 0, 850, 420);
+			tys = tys/2;
+			if(afterComma(tys) > 4){
+				if(beforeComma(tys) < 3){
+					tys = Number(tys.toFixed(4));
+				}
+				else{
+					tys = Number(tys.toFixed(2));
+				}
+			}	
+			origin.x = cwidth/2;
+			for(var i = 0; i < 5; i++){
+				$("a#go-up").click();
+			}
+			context.clearRect(0, 0, cwidth, cheight);
 			drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 			drawRiemann(rectanglewidth, a, b, n, function(x){
 				return eval(expression);
 			}, txs, tys, origin.x, origin.y);
-			drawXAxis(origin.y);	
+			drawXAxis(origin.y);
 			drawYAxis(origin.x);
+			drawOnX(origin.x, origin.y, txs, cwidth/thestep);
 			drawOnY(origin.x, origin.y, tys, 22);
-			drawOnX(origin.x, origin.y, txs, 22);
-			drawOnMinusX(origin.x, origin.y, txs, 22);
+			drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
 			drawOnMinusY(origin.x, origin.y, tys, 22);
 		}
 		else{
-			origin.x = 425;
-			origin.y = 210;
-			context.clearRect(0, 0, 850, 420);
-			drawCurve(curvewidth, val, im, xs, ys, origin.x, origin.y, curvecolor);
+			origin.x = cwidth/2;
+			origin.y = cheight/2;
+			context.clearRect(0, 0, cwidth, cheight);
+			drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 			drawRiemann(rectanglewidth, a, b, n, function(x){
 				return eval(expression);
-			}, xs, ys, origin.x, origin.y);
-			drawOnX(origin.x, origin.y, xs, 22);
-			drawOnY(origin.x, origin.y, ys, 22);
-			drawXAxis(origin.y);	
+			}, txs, tys, origin.x, origin.y);
+			drawXAxis(origin.y);
 			drawYAxis(origin.x);
-			drawOnMinusX(origin.x, origin.y,xs, 22);
-			drawOnMinusY(origin.x, origin.y,ys, 22);
+			drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+			drawOnY(origin.x, origin.y, tys, 22);
+			drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+			drawOnMinusY(origin.x, origin.y, tys, 22);
 		}
 	});
+	$("a#zoomin").hover(function(){
+		$("span#label").text("Zoom in").show();
+	}, function(){
+		$("span#label").hide();
+	});
 	$("a#zoomin").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		if(p < 10 && p >= 1){
 			p += 1;
 		}
@@ -497,26 +539,60 @@ $(document).ready(function(){
 		}
 		txs = xs/p;
 		tys = ys/p;
+		if(afterComma(txs) > 4){
+			console.log("44444 baby!");
+			if(beforeComma(txs) < 3){
+				if(beforeComma(txs) < 2){
+					txs = Number(txs.toFixed(6));
+				}
+				else{
+					txs = Number(txs.toFixed(4));
+				}
+			}
+			else{
+				txs = Number(txs.toFixed(2));
+			}
+		}
+		if(afterComma(tys) > 4){
+			console.log("44444 baby!");
+			if(beforeComma(tys) < 3){
+				if(beforeComma(tys) < 2){
+					tys = Number(tys.toFixed(6));
+				}
+				else{
+					tys = Number(tys.toFixed(4));
+				}
+			}
+			else{
+				tys = Number(tys.toFixed(2));
+			}
+		}
 		im = []; val = [];
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
+	});
+	$("a#zoomout").hover(function(){
+		$("span#label").text("Zoom out").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("a#zoomout").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		if(p > 0.2 && p <= 1){
 			p -= 0.1;
 		}
@@ -527,112 +603,165 @@ $(document).ready(function(){
 		}
 		txs = xs/p;
 		tys = ys/p;
-		im = []; val = [];
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		if(afterComma(txs) > 4){
+			console.log("44444 baby!");
+			if(beforeComma(txs) < 3){
+				if(beforeComma(txs) < 2){
+					txs = Number(txs.toFixed(6));
+				}
+				else{
+					txs = Number(txs.toFixed(4));
+				}
+			}
+			else{
+				txs = Number(txs.toFixed(2));
+			}
+		}
+		if(afterComma(tys) > 4){
+			console.log("44444 baby!");
+			if(beforeComma(tys) < 3){
+				if(beforeComma(tys) < 2){
+					tys = Number(tys.toFixed(6));
+				}
+				else{
+					tys = Number(tys.toFixed(4));
+				}
+			}
+			else{
+				tys = Number(tys.toFixed(2));
+			}
+		}
+		console.log("tys = " + tys);
+		im = [], val = [];
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
+	});
+	$("a#go-left").hover(function(){
+		$("span#label").text("Go left").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("a#go-left").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		c -= 2;
-		im = []; val = [];
-		origin.x += 38;
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		im = [], val = [];
+		origin.x += 2*thestep;
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
+	});
+	$("a#go-right").hover(function(){
+		$("span#label").text("Go right").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("a#go-right").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		c += 2;
 		im = []; val = [];
-		origin.x -= 38;
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		origin.x -= 2*thestep;
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
+	});
+	$("a#go-up").hover(function(){
+		$("span#label").text("Go up").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("a#go-up").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		e += 2;
 		im = []; val = [];
-		origin.y += 38;
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		origin.y += 2*thestep;
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
+	});
+	$("a#go-down").hover(function(){
+		$("span#label").text("Go down").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("a#go-down").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		e -= 2;
 		im = []; val = [];
-		origin.y -= 38;
-		context.clearRect(0, 0, 850, 420);
-		subdivide((-24 + c)*txs, (24 + c)*txs, 1200, val);
+		origin.y -= 2*thestep;
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);
 		drawYAxis(origin.x);
-		drawOnY(origin.x, origin.y, tys, 24 + e);
-		drawOnX(origin.x, origin.y, txs, 24 + c);
-		drawOnMinusX(origin.x, origin.y, txs, 24 - c);
-		drawOnMinusY(origin.x, origin.y, tys, 24 - e);
+		drawOnY(origin.x, origin.y, tys, 28 + e);
+		drawOnX(origin.x, origin.y, txs, (cwidth/thestep) + c);
+		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
+		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
 	});
 	$("canvas#graph").keydown(function(e){
 		if(e.which == 32){
@@ -665,43 +794,81 @@ $(document).ready(function(){
 			e.preventDefault();
 		}
 	});
+	$("canvas#toplayer").mousemove(function(event){
+		context2.clearRect(0, 0, cwidth, cheight);
+		context2.strokeStyle = "#22313F";
+		context2.fillStyle = "#000000";
+		x = Math.floor(Math.floor(event.pageX) - Math.floor($("canvas#graph").offset().left));
+		y = Math.floor(Math.floor(event.pageY) - Math.floor($("canvas#graph").offset().top));
+		ax = (-26.31 + c + (x/thestep))*txs;
+		ay = (11.05 + e - (y/thestep))*tys;
+		context2.beginPath();
+		context2.lineWidth = 2;
+		context2.moveTo(x, origin.y);
+		context2.lineTo(x, origin.y+6);
+		context2.moveTo(x, origin.y);
+		context2.lineTo(x, origin.y-6);
+		context2.moveTo(origin.x, y);
+		context2.lineTo(origin.x+6, y);
+		context2.moveTo(origin.x, y);
+		context2.lineTo(origin.x-6, y);
+		if((x - origin.x)%(thestep*(afterComma(txs) + beforeComma(txs))) != 0){
+			context2.fillText(ax.toFixed(afterComma(txs) + 1), x - 15, origin.y - 15, 2*thestep - 8 + 3*(afterComma(txs) + beforeComma(txs)));
+		}
+		if((y - origin.y)%(2*thestep) != 0){
+			context2.fillText(ay.toFixed(afterComma(tys) + 1), origin.x + 2*thestep - 10 + afterComma(tys)*3, y + 2, 30 + 3*(afterComma(tys)+beforeComma(tys)));
+		}
+		context2.stroke();
+	});
+	$("a#center").hover(function(){
+		$("span#label").text("Center").show();
+	}, function(){
+		$("span#label").hide();
+	});
 	$("a#center").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		c = 0, e = 0;
-		origin.x = 425;
-		origin.y = 210;
+		origin.x = cwidth/2;
+		origin.y = cheight/2;
 		val = [], im=[];
-		context.clearRect(0, 0, 850, 420);
-		subdivide(24*txs, -24*txs, 1200, val);
+		context.clearRect(0, 0, cwidth, cheight);
+		subdivide((cwidth/thestep)*txs, -(cwidth/thestep)*txs, 1200, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 		}
-		context.clearRect(0, 0, 850, 420);
+		context.clearRect(0, 0, cwidth, cheight);
 		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
 		drawRiemann(rectanglewidth, a, b, n, function(x){
 			return eval(expression);
 		}, txs, tys, origin.x, origin.y);
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
-		drawOnX(origin.x, origin.y, txs, 22);
-		drawOnY(origin.x, origin.y, tys, 22);
-		drawOnMinusX(origin.x, origin.y, txs, 22);
-		drawOnMinusY(origin.x, origin.y, tys, 22);
+		drawOnX(origin.x, origin.y, txs, 28);
+		drawOnY(origin.x, origin.y, tys, cwidth/thestep);
+		drawOnMinusX(origin.x, origin.y, txs, 28);
+		drawOnMinusY(origin.x, origin.y, tys, cwidth/thestep);
+	});
+	$("a#settings").hover(function(){
+		$("span#label").text("Settings").show();
+	}, function(){
+		$("span#label").hide();
 	});
 	$("nav#controlbar a#settings").click(function(){
+		context2.clearRect(0, 0, cwidth, cheight);
 		$("nav#controlbar div#settingsdiv").slideToggle(450);
 	});
 	//Curve related settings
 	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.black").click(function(){
-		curvecolor = "#000000";
+		curvecolor = "#4B77BE";
 		$.cookie('curvecolor', curvecolor, {expires: 365});
 	});
 	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.pomegranate").click(function(){
 		curvecolor = "#F22613";
 		$.cookie('curvecolor', curvecolor, {expires: 365});
 	});
-	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.madison").click(function(){
-		curvecolor = "#2C3E50";
+	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.wistful").click(function(){
+		curvecolor = "#AEA8D3";
 		$.cookie('curvecolor', curvecolor, {expires: 365});
 	});
 	$("nav#controlbar div#settingsdiv table tr td#curvesettings a.eucalyptus").click(function(){
@@ -734,15 +901,15 @@ $(document).ready(function(){
 	});
 	//Rectangles related settings
 	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").click(function(){
-		rectanglecolor = "#000000";
+		rectanglecolor = "#4B77BE";
 		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
 	});
 	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.pomegranate").click(function(){
 		rectanglecolor = "#F22613";
 		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
 	});
-	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.madison").click(function(){
-		rectanglecolor = "#2C3E50";
+	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.wistful").click(function(){
+		rectanglecolor = "#AEA8D3";
 		$.cookie('rectanglecolor', rectanglecolor, {expires: 365});
 	});
 	$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.eucalyptus").click(function(){

@@ -1,0 +1,222 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 5, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 8, ../sass/screen.scss */
+html {
+  padding: 0;
+  margin: 0;
+}
+
+/* line 12, ../sass/screen.scss */
+body {
+  background-color: #1E8BC3;
+  color: white;
+  font-family: sans-serif;
+  padding: 50px;
+  padding-top: 0px;
+  text-align: center;
+  background-image: linear-gradient(#22A7F0, #1F3A93);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 2px;
+}
+
+/* line 24, ../sass/screen.scss */
+body a {
+  cursor: pointer;
+}
+
+/* line 27, ../sass/screen.scss */
+img {
+  margin-bottom: 1px;
+}
+
+/* line 30, ../sass/screen.scss */
+div#parameters {
+  margin-bottom: 6px;
+  padding: 6px;
+}
+
+/* line 34, ../sass/screen.scss */
+div#parameters input {
+  width: 35px;
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 2.5px;
+  padding-right: 1.5px;
+  padding-left: 1.5px;
+  color: white;
+  margin-right: 20px;
+  text-align: center;
+}
+
+/* line 45, ../sass/screen.scss */
+div#parameters input#function {
+  width: 200px;
+}
+
+/* line 48, ../sass/screen.scss */
+a.control {
+  display: inline;
+  padding: 7px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* line 56, ../sass/screen.scss */
+nav#controlbar {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  border: 2px solid white;
+  border-bottom: none;
+  width: 834px;
+  text-align: left;
+  padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: #1F3A93;
+}
+
+/* line 69, ../sass/screen.scss */
+nav#controlbar a {
+  display: inline-block;
+  color: white;
+  padding: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid white;
+  border-radius: 3px;
+  text-decoration: none;
+}
+/* line 78, ../sass/screen.scss */
+nav#controlbar a span {
+  display: none;
+}
+
+/* line 82, ../sass/screen.scss */
+nav#controlbar a#settings {
+  float: right;
+}
+
+/* line 85, ../sass/screen.scss */
+nav#controlbar a:hover {
+  background-color: white;
+  color: #1F3A93;
+}
+/* line 88, ../sass/screen.scss */
+nav#controlbar a:hover span {
+  display: inline;
+}
+
+/* line 92, ../sass/screen.scss */
+select {
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 5px;
+  color: white;
+  margin-right: 20px;
+}
+
+/* line 99, ../sass/screen.scss */
+select option {
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 4px 8px;
+}
+
+/* line 104, ../sass/screen.scss */
+canvas {
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid white;
+  display: block;
+  margin-top: 0;
+}
+
+/* line 111, ../sass/screen.scss */
+footer {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  padding-right: 35px;
+  padding-left: 35px;
+  border-top: 3px solid white;
+}
+
+/* line 122, ../sass/screen.scss */
+footer a {
+  color: white;
+  text-decoration: none;
+}
