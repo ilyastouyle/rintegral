@@ -566,7 +566,7 @@ $(document).ready(function(){
 		}
 		im = []; val = [];
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
@@ -630,7 +630,7 @@ $(document).ready(function(){
 		}
 		im = [], val = [];
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
@@ -660,7 +660,7 @@ $(document).ready(function(){
 		im = [], val = [];
 		origin.x += 2*thestep;
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 300, val);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
@@ -721,7 +721,7 @@ $(document).ready(function(){
 		im = []; val = [];
 		origin.y += 2*thestep;
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
@@ -751,7 +751,7 @@ $(document).ready(function(){
 		im = []; val = [];
 		origin.y -= 2*thestep;
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 1200, val);
+		subdivide((-(cwidth/thestep) + c)*txs, ((cwidth/thestep) + c)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
@@ -845,7 +845,7 @@ $(document).ready(function(){
 		origin.y = cheight/2;
 		val = [], im=[];
 		context.clearRect(0, 0, cwidth, cheight);
-		subdivide((cwidth/thestep)*txs, -(cwidth/thestep)*txs, 1200, val);
+		subdivide((cwidth/thestep)*txs, -(cwidth/thestep)*txs, 800, val);
 		for(var i = 0; i<val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
