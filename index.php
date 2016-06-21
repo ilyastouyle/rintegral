@@ -11,12 +11,24 @@
 	<img src="riemann.svg" width="275">
 </header>
 <div id="parameters">
-	<label>f(x) = </label>
-	<input id="function" type="text" value="sin(2*x) + 4*cos(x)">
-	<label>a = </label><input type="text" id="a" maxlength="6" value="-1">
-	<label>b = </label><input type="text" id="b" maxlength="5" value="1">
-	<label>n = </label><input type="text" id="n" maxlength="5" value="150">
-	<a id="plot" class="control"><i class="fa fa-pencil-square"></i> | Plot </a>
+	<span id="f">
+		<label>f(x) = </label>
+		<input id="function" type="text" value="sin(x) + cos(x)" placeholder="sin(cos(x) - 1)">
+	</span>
+	<span>
+		<label>g(x) = </label>
+		<input id="function2" type="text" value="sin(x)">
+	</span>
+	<span>
+		<label>a = </label><input type="text" id="a" maxlength="6" value="-5">
+	</span>
+	<span>
+		<label>b = </label><input type="text" id="b" maxlength="5" value="5">
+	</span>
+	<span>
+		<label>n = </label><input type="text" id="n" maxlength="5" value="150">
+	</span>
+	<a id="plot" class="control"><i class="fa fa-pencil-square"></i> Plot </a>
 </div>
 <div id="main">
 	<nav id="controlbar">
@@ -73,10 +85,13 @@
 <article>
 	<div id="wrapper">
 		<canvas id="graph" width="1200" height="420" tabindex = "1"></canvas>
-		<canvas id="toplayer" width="1200" height="420" tabindex = "0"></canvas>
+		<canvas id="toplayer" width="1200" height="420" tabindex="2"></canvas>
 	</div>
 </article>
 <footer>
+	<img src="map.svg" width="105">
+	<img src="ball.svg" width="105">
+	<img src="surface.svg" width="105">
 	<nav>
 		<a href="plot.php">Home</a> -
 		<a href="about.php">About</a> -
