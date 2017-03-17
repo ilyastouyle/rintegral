@@ -1,17 +1,21 @@
 $(document).ready(function(){
-	var n = 10, a = -10, b = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0;
+	var n = 10, a = -10, b = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0, fn = 1;
 	var rectanglecolor, curvecolor, curvewidth, rectanglewidth;
-	var cheight = 420, cwidth = 1200;
 	//var origin = {x: 425, y: 210};
-	var origin = {x: cwidth/2, y: cheight/2};
+	var cheight = 420, cwidth = 1200;//Canvas height, Canvas width
+	var origin = {x: cwidth/2, y: cheight/2};//Coordinates of the origin
 	var thestep = 19;
 	var expression;
-	var subdivision = new Array();
+	var nbc = 1;//Number of curves
+	var curves = [];//Table containing all current curves
+	var subdivision = new Array();//Current subdivision table
 	var canvas = document.getElementById("graph");
 	var topcanvas = document.getElementById("toplayer");
 	var context = canvas.getContext("2d");
 	var topcontext = topcanvas.getContext("2d");
 	context.strokeStyle="#000000";
+	context.fillStyle = "#ececec";
+	context.fillRect(0, 0, cwidth, cheight);
 	//If it's the first visit, or the cookies have been removed, setting up a new cookie 
 	if($.cookie('curvewidth') == undefined){
 		curvewidth = 3, rectanglewidth = 2, curvecolor = "#F9BF3B", rectanglecolor = "#F9BF3B"; 
@@ -114,6 +118,15 @@ $(document).ready(function(){
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.sandstorm").siblings(".color").removeClass("selected");
 			break;
 	}
+	function Curve2d(X, Y, color, width){
+		this.X = X;
+		this.Y = Y;
+		this.color = color;
+		this.width = width;
+		this.draw = function(){
+			drawCurve(width, X, Y, txs, tys, origin.x, origin.y, color);
+		}
+	}
 	function drawYAxis(x){
 		context.beginPath();
 		context.strokeStyle="#ABB7B7";
@@ -161,6 +174,13 @@ $(document).ready(function(){
 			for(i=0; i<=n; i++){
 				table[i] = parseFloat((a + i*(b-a)/n).toPrecision(12)); 
 			}
+		}
+	}
+	//Subdivide riemann 
+	function subdivideR(X, Y, n, table){
+		var middle = 0;
+		for(var i = 0; i <= n; i++){
+			middle = (Y[i] + Y[i+1])/2; 
 		}
 	}
 	function xstep(a, b){
@@ -264,7 +284,6 @@ $(document).ready(function(){
 			vdash(x - thestep*i, y, 3);
 			if(i != 0 && i%(afterComma(xstep)+beforeComma(xstep)) == 0){
 				context.fillText("-" + (i*xstep).toFixed(afterComma(xstep)), x - 12 - (thestep*i) - 3*(afterComma(xstep)), y + 14, 28 + 3*(beforeComma(xstep) + afterComma(xstep)));
-				
 			}
 		}
 		context.stroke();
@@ -326,12 +345,12 @@ $(document).ready(function(){
 		context.lineTo(x + width, y);
 	}
 	//For drawing the riemann rectangles
-	function drawRiemann(width, a, b, n, funct, xstep, ystep, originx, originy){
+	function drawRiemann(width, X, Y, n, funct, xstep, ystep, originx, originy){
 		subdivision = [];
 		context.beginPath();
 		context.lineWidth = width;
 		if(n > 0){
-			subdivide(a, b, n, subdivision);
+			subdivide(n, subdivision);
 			context.beginPath();
 			context.strokeStyle = rectanglecolor;
 			for(var i = 0; i < subdivision.length - 1; i++){
@@ -367,7 +386,7 @@ $(document).ready(function(){
 		context.lineWidth = 1;
 	}
 	function evaluateInput(input){
-		var str = (input.val()).replace(/([^\[]*)\^([^\]]*)/g, function(match, p1, p2, offset, string){return "Math.pow("+ p1.slice(0, -1 )+", "+p2.slice(1, p2.length)+")"; }).replace(/\[/g, "(").replace(/\]/g, ")");
+		var str = (input).replace(/([^\[]*)\^([^\]]*)/g, function(match, p1, p2, offset, string){return "Math.pow("+ p1.slice(0, -1 )+", "+p2.slice(1, p2.length)+")"; }).replace(/\[/g, "(").replace(/\]/g, ")");
 		str = str.replace(/(?!a)\bsin(?!h)\b/g, "Math.sin").replace(/(?!a)\bcos(?!h)\b/g, "Math.cos").replace(/(?!a)\btan(?!h)\b/g, "Math.tan");
 		str = str.replace(/sinh/g, "Math.sinh").replace(/cosh/g, "Math.cosh").replace(/tanh/g, "Math.tanh");
 		str = str.replace(/asin/g, "Math.asin").replace(/acos/g, "Math.acos").replace(/atan/g, "Math.atan");
@@ -401,8 +420,8 @@ $(document).ready(function(){
 		}
 		return counter;
 	}
-	function format(x){
-
+	function getRandomArbitrary(min, max) {
+  		return Math.random() * (max - min) + min;
 	}
 	context.lineWidth = 1;
 	context.font = "11px sans-serif";
@@ -422,16 +441,32 @@ $(document).ready(function(){
 			width: 200
 		}, 250);
 	});
-	$("input").keydown(function(e){
+	$("body").on("keydown", "input",function(e){
 		if(e.which == 13){
 			$("a#plot").click();
 		}
 	});
+	$("a#add").click(function(){
+		//&#92; = \ in
+		$('<span class = "input function"><a href="#" id="delete"><i class = "fa fa-cut"></i></a><label></label><input id="f" type="text" placeholder="sin(cos(x) - 1)"></span>').insertAfter($("span.input.function").last()).find("label").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)<span class="equal"> &#92;( = &#92;) </span>');
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+	});
+	$("a#addp").click(function(){
+		//&#92; = \ in
+		$('<span class = "input function"><a href="#" id="delete"><i class = "fa fa-cut"></i></a><label></label><input id="f" type="text" placeholder="sin(cos(x) - 1)"></span>').insertAfter($("span.input.function").last()).find("label").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)<span class="equal"> &#92;( = &#92;) </span>');
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+	});
 	$("a#plot").click(function(){
 		topcontext.clearRect(0, 0, cwidth, cheight);
 		$("canvas#graph").focus();
-		expression = evaluateInput($("input#function"));
-		expression2 = evaluateInput($("input#function2"));
+		//Clearing out the last values
+		if(tab2 != undefined){
+			tab2.splice(0, tab2.length);
+		}
+		//To avoid drawing repeatedly
+		curves.splice(0, curves.length);
+		/*expression = evaluateInput($("input#function"));
+		expression2 = evaluateInput($("input#function2"));*/
 		c = 0, e = 0, p = 1;
 		origin.x = cwidth/2;
 		origin.y = cheight/2;
@@ -441,15 +476,17 @@ $(document).ready(function(){
 		a = eval($("input#a").val());
 		b = eval($("input#b").val());
 		n = eval($("input#n").val());
-		xs = xstep(a, b, 22);
+		//xs = xstep(a, b, 22);
+		xs = 0.1;
 		txs = xs;
-		subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1000, val);
-		for(var i = 0; i < val.length; i++){
+		//subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1000, val);
+		/*for(var i = 0; i < val.length; i++){
 			var x = val[i];
 			im[i] = eval(expression);
 			im2[i] = eval(expression2);
-		}	
-		ys = ystep(Minimum(im), Maximum(im));
+		}*/	
+		//ys = ystep(Minimum(im), Maximum(im));
+		ys = 0.1;
 		tys = ys;
 		if(afterComma(txs) > 4){
 			if(beforeComma(txs) < 3){
@@ -478,7 +515,10 @@ $(document).ready(function(){
 			}
 		}
 		context.clearRect(0, 0, cwidth, cheight);
-		if(Minimum(im) >= 0){
+		context.fillStyle = "#ececec";
+		context.fillRect(0, 0, cwidth, cheight);
+		context.fillStyle = "#000000";
+		/*if(Minimum(im) >= 0){
 			tys = tys/2;
 			if(afterComma(tys) > 4){
 				if(beforeComma(tys) < 3){
@@ -520,6 +560,104 @@ $(document).ready(function(){
 			drawOnMinusY(origin.x, origin.y, tys, 22);
 		}
 		drawCurve(curvewidth, val, im2, txs, tys, origin.x, origin.y, "#F9690E");
+		var k = 0;
+		myinterval = window.setInterval(function(){
+			if(k < 4){
+				a = -1 - k;
+				b = 1 + k;
+				xs = xstep(a, b, 22);
+				txs = xs;
+				subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1000, val);
+				for(var i = 0; i  < val.length; i++){
+					var x = val[i];
+					im[i] = eval(expression);
+					im2[i] = eval(expression2);
+				}	
+				context.clearRect(0, 0, cwidth, cheight);
+				drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+				drawRiemann(rectanglewidth, a, b, n, function(x){
+					return eval(expression);
+				}, txs, tys, origin.x, origin.y);
+				drawXAxis(origin.y);
+				drawYAxis(origin.x);
+				drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+				drawOnY(origin.x, origin.y, tys, 22);
+				drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+				drawOnMinusY(origin.x, origin.y, tys, 22);
+				k++;
+			}
+			else if(k < 10){
+				a = a - k;
+				b = b + k;
+				xs = xstep(a, b, 22);
+				txs = xs;
+				subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1000, val);
+				for(var i = 0; i  < val.length; i++){
+					var x = val[i];
+					im[i] = eval(expression);
+					im2[i] = eval(expression2);
+				}	
+				context.clearRect(0, 0, cwidth, cheight);
+				drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+				drawRiemann(rectanglewidth, a, b, n, function(x){
+					return eval(expression);
+				}, txs, tys, origin.x, origin.y);
+				drawXAxis(origin.y);
+				drawYAxis(origin.x);
+				drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+				drawOnY(origin.x, origin.y, tys, 22);
+				drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+				drawOnMinusY(origin.x, origin.y, tys, 22);
+				k++;
+			}else if(k = 10){
+				window.clearInterval(myinterval);
+			}
+		}, 250);
+		*/
+		txs = 0.5; tys = 0.1;
+		drawXAxis(origin.y);
+		drawYAxis(origin.x);
+		drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+		drawOnY(origin.x, origin.y, tys, 22);
+		drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+		drawOnMinusY(origin.x, origin.y, tys, 22);
+		var tab1 = [];
+		var tab2 = [];
+		subdivide(a, b, 200, tab1);
+		for(var j = 0; j < $("span.function").length; j++){
+			for(var i = j*tab1.length; i < (j+1)*tab1.length; i++){
+				if(j == 0){
+					x = tab1[i];
+				}
+				else{
+					x = tab1[i - (tab1.length*j)];
+				}
+				tab2[i] = eval(evaluateInput($($("span.function")[j]).children("input").val()));
+				console.log(evaluateInput($($("span.function")[j]).children("input").val()));
+			}
+			curves.push(new Curve2d(tab1, tab2.slice(j*tab1.length, (j+1)*tab1.length), "rgba(" + Math.floor(255*Math.random()) + ", " + Math.floor(255*Math.random()) +  ", " + Math.floor(255*Math.random()) + ", 1)", 3));
+		}
+		for(var i = 0; i < curves.length; i++){
+			curves[i].draw();
+		}
+		/*var k = 0;
+		var myint = window.setInterval(function(){
+			if(k < 80){
+				if(k != 0){
+					(new Curve2d(tab1.slice(10*k - 1, 10*(k+1) + 1), tab2.slice(10*k - 1, 10*(k+1) + 1), "#1F3A93", 3)).draw();
+				}
+				else{
+					(new Curve2d(tab1.slice(10*k, 10*(k+1) + 1), tab2.slice(10*k, 10*(k+1) + 1), "#1F3A93", 3)).draw();
+				}
+			}
+			else{
+				window.clearInterval(myint);
+			}
+			k++;
+		}, 100);*/
+	});
+	$("a#save").click(function(){
+		Canvas2Image.saveAsPNG(canvas, cwidth, cheight);
 	});
 	$("a#zoomin").hover(function(){
 		$("span#label").text("Zoom in").show();
@@ -832,6 +970,13 @@ $(document).ready(function(){
 			topcontext.fillText(ay.toFixed(afterComma(tys) + 1), origin.x + 2*thestep - 10 + afterComma(tys)*3, y + 2, 30 + 3*(afterComma(tys)+beforeComma(tys)));
 		}
 		topcontext.stroke();
+	});
+	$("body").on("click", "span.input input",function(){
+		$("span.input").removeClass("selected");
+		$(this).parent().addClass("selected");
+	});
+	$("body").on("blur", "span.input input",function(){
+		$("span.input").removeClass("selected");
 	});
 	$("a#center").hover(function(){
 		$("span#label").text("Center").show();
