@@ -70,8 +70,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* line 8, ../sass/screen.scss */
 body {
   background-color: #ececec;
-  color: #1F3A93;
-  font-family: sans-serif;
+  color: #3A539B;
+  font-family: Open-Light;
   text-align: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -82,38 +82,51 @@ body a {
 }
 /* line 19, ../sass/screen.scss */
 body header {
-  background-color: #1F3A93;
-  margin-bottom: 15px;
-  padding: 5px;
+  display: flex;
+  background-color: #3A539B;
+  clear: both;
+  color: #ececec;
+  width: 100%;
+  margin-bottom: 5px;
 }
-/* line 24, ../sass/screen.scss */
-body img {
-  margin-bottom: 1px;
+/* line 26, ../sass/screen.scss */
+body header img {
+  margin: auto;
+  display: block;
+  float: left;
+  clear: left;
 }
-/* line 27, ../sass/screen.scss */
+/* line 33, ../sass/screen.scss */
 body div#parameters {
-  margin-bottom: 6px;
-  padding: 6px;
+  background-color: #3A539B;
+  color: #ececec;
+  height: auto;
+  padding: 0;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: scroll;
+  white-space: nowrap;
 }
-/* line 30, ../sass/screen.scss */
+/* line 44, ../sass/screen.scss */
 body div#parameters span.input {
-  border: 2px solid #1F3A93;
-  border-radius: 5px 0px 5px 0px;
+  text-align: center;
+  border-right: 5px solid #ececec;
+  border-left: 5px solid #ececec;
   display: inline-block;
-  padding: 0px;
-  margin-right: 4px;
+  padding-right: 4px;
+  margin-right: 12px;
+  color: #ececec;
+  background-color: #1E8BC3;
 }
-/* line 37, ../sass/screen.scss */
+/* line 54, ../sass/screen.scss */
 body div#parameters span.input label {
   padding: 3px;
-  padding-right: 0px;
+  padding-right: 8px;
   padding-left: 8px;
 }
-/* line 41, ../sass/screen.scss */
-body div#parameters span.input label span.equal {
-  display: none;
-}
-/* line 45, ../sass/screen.scss */
+/* line 59, ../sass/screen.scss */
 body div#parameters span.input input {
   width: 0px;
   background-color: transparent;
@@ -121,99 +134,230 @@ body div#parameters span.input input {
   padding: 3.5px;
   padding-right: 1.5px;
   padding-left: 1.5px;
-  color: #1F3A93;
+  color: #ececec;
   text-align: center;
   visibility: hidden;
 }
-/* line 56, ../sass/screen.scss */
-body div#parameters span.input a#delete {
-  color: #1F3A93;
-  border-right: 2px solid #1F3A93;
+/* line 70, ../sass/screen.scss */
+body div#parameters span.input input:not(.jscolor) {
+  display: none;
+}
+/* line 73, ../sass/screen.scss */
+body div#parameters span.input input.jscolor {
+  visibility: visible;
+  width: 22px;
+  border-radius: 75%;
+  border: 2px solid #ececec;
+  cursor: pointer;
+}
+/* line 80, ../sass/screen.scss */
+body div#parameters span.input label.y {
+  border-left: none;
+}
+/* line 83, ../sass/screen.scss */
+body div#parameters span.input label.value {
+  display: none;
+}
+/* line 86, ../sass/screen.scss */
+body div#parameters span.input label:not(.fx) {
+  border-left: 2px solid #ececec;
+}
+/* line 89, ../sass/screen.scss */
+body div#parameters span.input label.selec:not(.fx) {
+  border-left: 0;
+}
+/* line 92, ../sass/screen.scss */
+body div#parameters span.input label.xt, body div#parameters span.input label.yt {
+  border-left: 0;
+}
+/* line 95, ../sass/screen.scss */
+body div#parameters span.input a {
+  color: #ececec;
+  padding: 3px;
+  padding-right: 5px;
+}
+/* line 100, ../sass/screen.scss */
+body div#parameters span.input a.delete {
   margin-left: 3px;
   padding: 3px;
   padding-right: 4px;
   margin-right: 0px;
+  border-right: 2px solid #ececec;
 }
-/* line 66, ../sass/screen.scss */
-body div#parameters span:hover input {
+/* line 107, ../sass/screen.scss */
+body div#parameters span.input a.dropdown {
+  border-right: 2px solid #ececec;
+}
+/* line 110, ../sass/screen.scss */
+body div#parameters span.input a.edit {
+  border-right: 2px solid #ececec;
+}
+/* line 113, ../sass/screen.scss */
+body div#parameters span.input a.save {
+  border-right: 2px solid #ececec;
+  display: none;
+}
+/* line 117, ../sass/screen.scss */
+body div#parameters span.input a.previous {
+  display: none;
+}
+/* line 120, ../sass/screen.scss */
+body div#parameters span.input a.next {
+  display: none;
+}
+/* line 133, ../sass/screen.scss */
+body div#parameters input.selected.f, body div#parameters input.selected.x, body div#parameters input.selected.y, body div#parameters input.selected.value {
   visibility: visible;
-  width: 50px;
+  width: 70px;
+  border-bottom: 2px solid #ececec;
 }
-/* line 71, ../sass/screen.scss */
-body div#parameters span.selected {
-  background-color: transparent;
-  color: #3A539B;
+/* line 138, ../sass/screen.scss */
+body div#parameters input.selected.jscolor {
+  width: 35px;
 }
-/* line 74, ../sass/screen.scss */
-body div#parameters span.selected label {
-  background-color: #2574A9;
-  color: white;
-}
-/* line 77, ../sass/screen.scss */
-body div#parameters span.selected label span.equal {
-  display: inline;
-}
-/* line 81, ../sass/screen.scss */
-body div#parameters span.selected input {
-  visibility: visible;
-  color: #3A539B;
-}
-/* line 87, ../sass/screen.scss */
-body div#parameters span.selected.input.function input {
-  width: 110px;
-}
-/* line 92, ../sass/screen.scss */
-body div#parameters span.selected.input.value input {
-  width: 60px;
-}
-/* line 96, ../sass/screen.scss */
+/* line 141, ../sass/screen.scss */
 body div#parameters input#function {
   width: 200px;
 }
-/* line 99, ../sass/screen.scss */
-body div#parameters a.control {
-  display: inline;
+/* line 145, ../sass/screen.scss */
+body div#fsettings {
+  color: #ececec;
+  background-color: #3A539B;
+  overflow: hidden;
+  text-align: center;
+  padding: 10px 0px;
+  display: none;
+}
+/* line 152, ../sass/screen.scss */
+body div#fsettings div.row {
+  padding: 6px 0px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+/* line 157, ../sass/screen.scss */
+body div#fsettings div.row label {
+  display: block;
+  margin-bottom: 20px;
+}
+/* line 161, ../sass/screen.scss */
+body div#fsettings div.row span.thickness {
+  cursor: pointer;
+  margin-left: auto;
+  margin-bottom: 4px;
+  background-color: #ececec;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+/* line 170, ../sass/screen.scss */
+body div#fsettings div.row span.scontainer {
+  margin-right: 6px;
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #3A539B;
+  border-radius: 50%;
+}
+/* line 178, ../sass/screen.scss */
+body div#fsettings div.row span.scontainer.selected {
+  border: 2px solid #ececec;
+  border-radius: 50%;
+}
+/* line 182, ../sass/screen.scss */
+body div#fsettings div.row span#thn {
+  border: 12px solid #1E8BC3;
+  width: 4px;
+  height: 4px;
+}
+/* line 187, ../sass/screen.scss */
+body div#fsettings div.row span#md {
+  border: 11px solid #1E8BC3;
+  width: 6px;
+  height: 6px;
+}
+/* line 192, ../sass/screen.scss */
+body div#fsettings div.row span#thk {
+  border: 9px solid #1E8BC3;
+  width: 10px;
+  height: 10px;
+}
+/* line 197, ../sass/screen.scss */
+body div#fsettings div.row div.column {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  width: 20%;
+  text-align: center;
+}
+/* line 205, ../sass/screen.scss */
+body div#fsettings div.row div.column input {
+  width: 50px;
+  background-color: #1E8BC3;
+  border: none;
+  border-bottom: 2px solid #ececec;
+  color: #ececec;
+  text-align: center;
+  padding: 6px;
+  padding-right: 0;
+}
+/* line 215, ../sass/screen.scss */
+body div#fsettings div.row div.column input#divide {
+  border-right: 2px solid #ececec;
+}
+/* line 218, ../sass/screen.scss */
+body div#fsettings div.row div.column button {
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid #ececec;
   padding: 6px;
   padding-right: 8px;
   padding-left: 8px;
-  background-color: #1F3A93;
-  color: white;
-  border: 2px solid #1F3A93;
-  text-decoration: none;
-  border-radius: 6px 0px 6px 0px;
-  margin-left: 10px;
+  background-color: #1E8BC3;
+  color: #ececec;
 }
-/* line 112, ../sass/screen.scss */
+/* line 231, ../sass/screen.scss */
+body div#fsettings div.row.two div.column:nth-child(1) {
+  width: 40%;
+}
+/* line 236, ../sass/screen.scss */
 body nav#controlbar {
   display: block;
   margin-right: auto;
   margin-left: auto;
-  margin-top: 15px;
+  margin-top: 5px;
   text-align: left;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
-/* line 120, ../sass/screen.scss */
+/* line 244, ../sass/screen.scss */
 body nav#controlbar div#upperdiv {
   width: 100%;
-  background-color: #1F3A93;
+  background-color: #3A539B;
 }
-/* line 123, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons {
-  width: 700px;
+/* line 247, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper {
+  display: flex;
   margin-left: auto;
   margin-right: auto;
+  width: 85%;
+}
+/* line 252, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav {
+  display: inline-block;
   padding: 10px;
   padding-bottom: 12.5px;
   padding-top: 12.5px;
-  color: white;
+  color: #ececec;
 }
-/* line 131, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons i {
+/* line 258, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav i {
   color: #ECF0F1;
 }
-/* line 134, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons a {
+/* line 261, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a {
   display: inline-block;
   color: #ECF0F1;
   padding: 4px;
@@ -221,37 +365,53 @@ body nav#controlbar div#upperdiv nav#buttons a {
   border-right: 2px solid #ececec;
   text-decoration: none;
 }
-/* line 141, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons a span {
+/* line 268, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a span {
   display: none;
 }
-/* line 145, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons a#settings {
+/* line 272, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a#settings {
   float: right;
 }
-/* line 148, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons a#center {
+/* line 275, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a.control {
+  float: right;
+  padding-top: 6px;
+  border: 2px solid #ececec;
+}
+/* line 280, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a#center {
   border-right: none;
 }
-/* line 151, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons a#settings {
+/* line 283, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav a#settings {
   border-right: none;
 }
-/* line 154, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons span#status {
+/* line 286, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav span#status {
   display: inline-block;
   float: right;
   padding: 4px;
   margin-right: 6px;
 }
-/* line 160, ../sass/screen.scss */
-body nav#controlbar div#upperdiv nav#buttons span#label {
+/* line 292, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav span#label {
   display: inline-block;
   float: right;
   padding: 4px;
   margin-right: 6px;
 }
-/* line 168, ../sass/screen.scss */
+/* line 299, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav#buttons {
+  width: 55%;
+  border-right: 4px solid #ececec;
+}
+/* line 303, ../sass/screen.scss */
+body nav#controlbar div#upperdiv nav#wrapper nav#controlbuttons {
+  width: 40%;
+  clear: both;
+}
+/* line 309, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv {
   display: none;
   margin-right: auto;
@@ -261,105 +421,106 @@ body nav#controlbar div#settingsdiv {
   padding-top: 35px;
   text-align: center;
 }
-/* line 176, ../sass/screen.scss */
+/* line 317, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table {
   margin-right: auto;
   margin-left: auto;
   width: 800px;
   margin-bottom: 25px;
 }
-/* line 181, ../sass/screen.scss */
+/* line 322, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td {
   width: 394px;
   padding: 2px;
   float: left;
   text-align: center;
 }
-/* line 186, ../sass/screen.scss */
+/* line 327, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a {
   border: none;
   padding: 10px;
   padding-right: 12px;
   padding-left: 12px;
 }
-/* line 191, ../sass/screen.scss */
+/* line 332, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a i {
   visibility: hidden;
 }
-/* line 195, ../sass/screen.scss */
+/* line 336, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a:hover {
   color: #1BBC9B;
   background-color: transparent;
 }
-/* line 198, ../sass/screen.scss */
+/* line 339, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a:hover i {
   visibility: visible;
 }
-/* line 202, ../sass/screen.scss */
+/* line 343, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.color {
   border: 2px solid #22313F;
   border-radius: 100%;
 }
-/* line 206, ../sass/screen.scss */
+/* line 347, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.selected {
   color: #ececec;
 }
-/* line 208, ../sass/screen.scss */
+/* line 349, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.selected i {
   visibility: visible;
 }
-/* line 212, ../sass/screen.scss */
+/* line 353, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.thickness.selected {
-  background-color: #1F3A93;
+  background-color: #3A539B;
   color: #ececec;
 }
-/* line 216, ../sass/screen.scss */
+/* line 357, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.black {
-  background-color: #1F3A93;
+  background-color: #3A539B;
 }
-/* line 219, ../sass/screen.scss */
+/* line 360, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.pomegranate {
   background-color: #F22613;
 }
-/* line 222, ../sass/screen.scss */
+/* line 363, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.wistful {
   background-color: #AEA8D3;
 }
-/* line 225, ../sass/screen.scss */
+/* line 366, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.eucalyptus {
   background-color: #26A65B;
 }
-/* line 228, ../sass/screen.scss */
+/* line 369, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.ecstasy {
   background-color: #F9690E;
 }
-/* line 231, ../sass/screen.scss */
+/* line 372, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.sandstorm {
   background-color: #F9BF3B;
 }
-/* line 234, ../sass/screen.scss */
+/* line 375, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.thickness {
   padding: 3px;
-  border: 2px solid #1F3A93;
+  border: 2px solid #3A539B;
 }
-/* line 237, ../sass/screen.scss */
+/* line 378, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td a.thickness i {
-  border-right: 1px solid #1F3A93;
+  border-right: 1px solid #3A539B;
 }
-/* line 242, ../sass/screen.scss */
+/* line 383, ../sass/screen.scss */
 body nav#controlbar div#settingsdiv table tr td#curvesettings {
-  border-right: 3px solid #1F3A93;
+  border-right: 3px solid #3A539B;
 }
-/* line 249, ../sass/screen.scss */
+/* line 390, ../sass/screen.scss */
 body article div#wrapper {
   width: 1200px;
   height: 450px;
+  margin-top: 10px;
   margin-bottom: 10px;
   margin-right: auto;
   margin-left: auto;
   position: relative;
 }
-/* line 256, ../sass/screen.scss */
+/* line 398, ../sass/screen.scss */
 body article div#wrapper canvas#graph {
   display: block;
   margin-right: auto;
@@ -367,7 +528,7 @@ body article div#wrapper canvas#graph {
   position: absolute;
   z-index: 0;
 }
-/* line 263, ../sass/screen.scss */
+/* line 405, ../sass/screen.scss */
 body article div#wrapper canvas#toplayer {
   display: block;
   margin-right: auto;
@@ -375,7 +536,7 @@ body article div#wrapper canvas#toplayer {
   position: absolute;
   z-index: 1;
 }
-/* line 272, ../sass/screen.scss */
+/* line 414, ../sass/screen.scss */
 body footer {
   position: relative;
   display: inline-block;
@@ -383,15 +544,20 @@ body footer {
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
-  padding-top: 10px;
-  padding-bottom: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   padding-right: 5% px;
   padding-left: 5% px;
-  background-color: #1F3A93;
-  color: white;
+  background-color: #3A539B;
+  color: #ececec;
 }
-/* line 286, ../sass/screen.scss */
+/* line 428, ../sass/screen.scss */
 body footer a {
-  color: white;
+  color: #ececec;
   text-decoration: none;
+}
+
+@font-face {
+  font-family: Open-Light;
+  src: url("/rintegral/OpenSans-Light.ttf");
 }
