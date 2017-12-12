@@ -1,5 +1,11 @@
 $(document).ready(function(){
-	var n = 10, a = -10, b = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0, fn = 1;
+	var n = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0, fn = 1;
+	var indexcs = 0;//index of the current span.input for which settings should be saved
+	var P = {a:[0, 0], b:[0, 0], n:[0]}//Initial values for both initial curves
+	var tab1 = [];
+	var tab2 = [];
+	var tabt = [];
+	var tests = 0;
 	var rectanglecolor, curvecolor, curvewidth, rectanglewidth;
 	//var origin = {x: 425, y: 210};
 	var cheight = 420, cwidth = 1200;//Canvas height, Canvas width
@@ -16,6 +22,9 @@ $(document).ready(function(){
 	context.strokeStyle="#000000";
 	context.fillStyle = "#ececec";
 	context.fillRect(0, 0, cwidth, cheight);
+	//In the beginning, we push both pre-existing curves
+	curves.push(new Curve2d([], [], "#" + $($("span.function")[0]).children(".jscolor").val(), 4));
+	curves.push(new Curve2d([], [], "#" + $($("span.parameterized")[0]).children(".jscolor").val(), 3));
 	//If it's the first visit, or the cookies have been removed, setting up a new cookie 
 	if($.cookie('curvewidth') == undefined){
 		curvewidth = 3, rectanglewidth = 2, curvecolor = "#F9BF3B", rectanglecolor = "#F9BF3B"; 
@@ -127,17 +136,17 @@ $(document).ready(function(){
 			drawCurve(width, X, Y, txs, tys, origin.x, origin.y, color);
 		}
 	}
-	function drawYAxis(x){
+	function drawYAxis(x, color){
 		context.beginPath();
-		context.strokeStyle="#ABB7B7";
+		context.strokeStyle = color;
 		context.lineWidth = 1;
 		context.moveTo(x, 0);		
 		context.lineTo(x, cheight);
 		context.stroke();
 	}
-	function drawXAxis(y){
+	function drawXAxis(y, color){
 		context.beginPath();
-		context.strokeStyle="#ABB7B7";
+		context.strokeStyle = color;
 		context.lineWidth = 1;
 		context.moveTo(0, y);
 		context.lineTo(cwidth, y);
@@ -164,15 +173,15 @@ $(document).ready(function(){
 		context.stroke();
 		context.lineWidth = 1;
 	}
-	function subdivide(a, b, n, table){
-		if(a > b){
+	function subdivide(x_0, x_n, n, tab){
+		if(x_0 > x_n){
 			for(i=0; i<=n; i++){
-				table[i] = parseFloat((b + i*(a-b)/n).toPrecision(12)); 
+				tab[i] = parseFloat((x_0 - i*(x_0-x_n)/n).toPrecision(12)); 
 			}
 		}
 		else{
 			for(i=0; i<=n; i++){
-				table[i] = parseFloat((a + i*(b-a)/n).toPrecision(12)); 
+				tab[i] = parseFloat((x_0 + i*(x_n-x_0)/n).toPrecision(12)); 
 			}
 		}
 	}
@@ -183,67 +192,120 @@ $(document).ready(function(){
 			middle = (Y[i] + Y[i+1])/2; 
 		}
 	}
-	function xstep(a, b){
-		d = 0;
-		if(Math.abs(a) <= 1 && Math.abs(b) <= 1){
-			if(Math.abs(a) >= Math.abs(b)){
-				return Math.abs(a)/20;
+	function xstep(){
+		d = 0, mn = Minimum(curves[0].X), mx = Maximum(curves[0].X);
+		for(var i = 1; i < curves.length; i++){
+			if(mn > Minimum(curves[i].X)){
+				mn = Minimum(curves[i].X)
 			}
-			else{
-				return Math.abs(b)/20;
+		}
+		for(var i = 1; i < curves.length; i++){
+			if(mx < Maximum(curves[i].X)){
+				mx = Maximum(curves[i].X)
 			}
-		}else{
-			if(Math.abs(a) > Math.abs(b)){
-				while(Math.abs(a) > 2*d){
+		}
+		if(Math.abs(mn) >= Math.abs(mx)){
+			if(Math.abs(mn) >= 2){
+				while(Math.abs(mn) > 2*d){
 					d++;
 				}
-				return d/15;
+				return d/10;
 			}
 			else{
-				while(Math.abs(b) > 2*d){
+				while(Math.abs(mn) > 2*Math.pow(10, d)){
+					d--;
+				}
+				return Math.pow(10, d - 1);
+			}	
+		}
+		else{
+			if(Math.abs(mx) >= 2){
+				while(Math.abs(mx) > 2*d){
 					d++;
 				}
-				return d/15;
+				return d/10;
 			}
+			else{
+				while(Math.abs(mx) > 2*Math.pow(10, d)){
+					d--;
+				}
+				return Math.pow(10, d - 1);
+			}	
 		}
 	}
 	function ystep(min, max){
-		d = 0;
-		if(Math.abs(max) < 2 && Math.abs(min) < 2){
-			if(Math.abs(max) >= Math.abs(min)){
-				return Math.abs(max)/10;
+		d = 0, mn = Minimum(curves[0].Y), mx = Maximum(curves[0].Y);
+		for(var i = 1; i < curves.length; i++){
+			if(mn > Minimum(curves[i].Y)){
+				mn = Minimum(curves[i].Y)
+			}
+		}
+		for(var i = 1; i < curves.length; i++){
+			if(mx < Maximum(curves[i].Y)){
+				mx = Maximum(curves[i].Y)
+			}
+		}
+		if(Math.abs(mn) >= Math.abs(mx)){
+			if(Math.abs(mn) >= 2){
+				while(Math.abs(mn) > 2*d){
+					d++;
+				}
+				return d/5;
 			}
 			else{
-				return Math.abs(min)/10;
-			}
+				while(Math.abs(mn) > 2*Math.pow(10, d)){
+					d--;
+				}
+				return Math.pow(10, d - 1);
+			}	
 		}
 		else{
-			if(Math.abs(min) > Math.abs(max)){
-				if(Math.abs(min) <= Math.exp(18))
-				{
-					while(Math.abs(min) > 2*d){
-						d++;
-					}
-					return d/5;
+			if(Math.abs(mx) >= 2){
+				while(Math.abs(mx) > 2*d){
+					d++;
 				}
-				else{
-					return Math.exp(4);
-				}
+				return d/5;
 			}
 			else{
-				if(Math.abs(max) <= Math.exp(18)){
-					while((2*d < Math.abs(max))){
-						d++;
-					}
-					return d/5;
+				while(Math.abs(mx) > 2*Math.pow(10, d)){
+					d--;
 				}
-				else{
-					return Math.exp(4);
-				}
-			}
+				return Math.pow(10, d - 1);
+			}	
 		}
+		/*if(Math.abs(mn) >= 2 && Math.abs(mx) >= 2){
+			if(Math.abs(mn) >= Math.abs(mx)){
+				while(Math.abs(mn) > 2*d){
+					d++;
+				}
+				return d/5;
+			}
+			else{
+				while(Math.abs(mx) > 2*d){
+					d++;
+				}
+				return d/5;
+			}
+	
+		else{
+			if(Math.abs(mn) >= Math.abs(mx)){
+				while(Math.abs(mn) > 2*Math.pow(10, d)){
+					d--;
+				}
+				return Math.pow(10, d - 1);
+			}
+			else{
+				while(Math.abs(mx) > 2*Math.pow(10, d)){
+					d--;
+				}
+				return Math.pow(10, d - 1);
+			}
+		}*/
 	}
 	function drawOnX(x, y, xstep, m){
+		for(var i = 1; i <= m; i++){
+			drawYAxis(origin.x + i*thestep, "#DADFE1");
+		}
 		context.strokeStyle = "#1F3A93";
 		context.beginPath();
 		for(var i = 0; i <= m+1; i++){
@@ -256,6 +318,9 @@ $(document).ready(function(){
 		context.stroke();
 	}
 	function drawOnY(x, y, ystep, m){
+		for(var i = 1; i <= m; i++){
+			drawXAxis(origin.y - i*thestep, "#DADFE1");
+		}
 		context.beginPath();
 		context.strokeStyle = "#1F3A93";
 		if(ystep < (Math.exp(15))){
@@ -278,6 +343,9 @@ $(document).ready(function(){
 		context.stroke();
 	}
 	function drawOnMinusX(x, y, xstep, m){
+		for(var i = 1; i <= m + 1; i++){
+			drawYAxis(origin.x - i*thestep, "#DADFE1");
+		}
 		context.beginPath();
 		context.strokeStyle = "#1F3A93";
 		for(var i = 1; i <= m + 1; i++){
@@ -289,8 +357,11 @@ $(document).ready(function(){
 		context.stroke();
 	}
 	function drawOnMinusY(x, y, ystep, m){
-		context.beginPath();
+		for(var i = 1; i <= m; i++){
+			drawXAxis(origin.y + i*thestep, "#DADFE1");
+		}
 		context.strokeStyle = "#1F3A93";
+		context.beginPath();
 		for(var i = 1; i<=m; i++){
 			hdash(x, y + thestep*i, 3);
 			if(i%2 == 0){
@@ -319,10 +390,22 @@ $(document).ready(function(){
 	//Returns the maximum on a range of values
 	function Maximum(values){
 		var max;
-		max = 0;
+		if(values[0] == undefined){
+			max = 0;
+		}
+		else if(isNaN(values[0])){
+			max = 0;
+		}
+		else{
+			max = values[0];
+		}
 		for(var i = 0; i < values.length; i++){
-			if(max < values[i]){
-				max = values[i];
+			if(values[i] == undefined){}
+			else if(isNaN(values[0])){}
+			else{
+				if(max < values[i]){
+					max = values[i];
+				}
 			}
 		}
 		return max;
@@ -330,10 +413,22 @@ $(document).ready(function(){
 	//Returns the minimum on a range of values
 	function Minimum(values){
 		var min;
-		min = 0;
+		if(values[0] == undefined){
+			min = 0;
+		}
+		else if(isNaN(values[0])){
+			min = 0;
+		}
+		else{
+			min = values[0];
+		}
 		for(var i = 0; i < values.length; i++){
-			if(min > values[i]){
-				min = values[i];
+			if(values[i] == undefined){}
+			else if(isNaN(values[0])){}
+			else{
+				if(min > values[i]){
+					min = values[i];
+				}
 			}
 		}
 		return min;
@@ -345,12 +440,12 @@ $(document).ready(function(){
 		context.lineTo(x + width, y);
 	}
 	//For drawing the riemann rectangles
-	function drawRiemann(width, X, Y, n, funct, xstep, ystep, originx, originy){
+	function drawRiemann(width, a, b, n, funct, xstep, ystep, originx, originy){
 		subdivision = [];
 		context.beginPath();
 		context.lineWidth = width;
 		if(n > 0){
-			subdivide(n, subdivision);
+			subdivide(a, b, n, subdivision);
 			context.beginPath();
 			context.strokeStyle = rectanglecolor;
 			for(var i = 0; i < subdivision.length - 1; i++){
@@ -362,12 +457,12 @@ $(document).ready(function(){
 
 		}
 	}
-	//Takes the width, of the line to draw with, the table of values and their images
-	function drawCurve(width, values, images, xstep, ystep, x, y, color){
+	//Takes the width, of the line to draw with, the table of values and their images, x,y steps and the color
+	function drawCurve(w, values, images, xstep, ystep, x, y, color){
 		context.beginPath();
 		context.strokeStyle = color;
 		context.moveTo(x, y);
-		context.lineWidth = width;
+		context.lineWidth = w;
 		if(ystep < Math.exp(12)){
 			for(var i = 0; i < values.length; i++){
 				if(!isNaN(images[i])){
@@ -423,6 +518,21 @@ $(document).ready(function(){
 	function getRandomArbitrary(min, max) {
   		return Math.random() * (max - min) + min;
 	}
+	function ord(p, x){
+		var i = 0;
+		if(x == 0){
+			return -1000;
+		}
+		if(x % p != 0){
+			return 0;
+		}
+		else{
+			while(x % Math.pow(p, i) == 0){
+				i++;
+			}
+			return i-1;
+		}
+	}
 	context.lineWidth = 1;
 	context.font = "11px sans-serif";
 	context.fillStyle = "#000000";
@@ -441,20 +551,79 @@ $(document).ready(function(){
 			width: 200
 		}, 250);
 	});
-	$("body").on("keydown", "input",function(e){
+	/*$("body").on("keydown", "input#a", function(e){
 		if(e.which == 13){
-			$("a#plot").click();
+			//P.a[$("span.input").index($(this).parent())] = $(this).val();
+		}
+	});
+	$("body").on("keydown", "input#b", function(e){
+		if(e.which == 13){
+			//P.b[$("span.input").index($(this).parent())] = $(this).val();
+		}
+	});*/
+	$("body").on("keydown", "input", function(e){
+		if(e.which == 13){
+			if($(this).parent().children("input").index($(this)) == 3){
+				//Go back to the first input with a simple next()
+				$(this).parent().children("a.next")[$(this).parent().children("input").index($(this))].click();
+				//Then save all the inputs
+				$(this).parent().children("a.save").click();
+			}
+			else{
+				$(this).parent().children("a.next")[$(this).parent().children("input").index($(this))].click();
+			}
 		}
 	});
 	$("a#add").click(function(){
-		//&#92; = \ in
-		$('<span class = "input function"><a href="#" id="delete"><i class = "fa fa-cut"></i></a><label></label><input id="f" type="text" placeholder="sin(cos(x) - 1)"></span>').insertAfter($("span.input.function").last()).find("label").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)<span class="equal"> &#92;( = &#92;) </span>');
-		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+		addNewFunct($("span.input.function").length);
 	});
+	function addNewFunct(nb){
+		//&#92; = \ in
+		//console.log(curves);
+		if($("span.input.function").length == 0){
+			$("div#parameters").scrollLeft(($("span.input").width())*($("span.input").length) + 20);
+			P.a.splice(0, 0, 0);
+			P.b.splice(0, 0, 0);
+			curves.splice(0, 0, new Curve2d(tab1, tab2, "#3A539B", 3));	
+		}
+		else{
+			$("div#parameters").scrollLeft(($("span.input").width())*($("span.input").length) + 20);
+			P.a.splice(nb, 0, 0);
+			P.b.splice(nb, 0, 0);
+			curves.splice(nb, 0, new Curve2d(tab1, tab2, "#3A539B", 3));
+		}
+		if($("span.input.function").length == 0){
+			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').prependTo("div#parameters").find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');
+		}
+		else{
+			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').insertAfter($("span.input")[nb - 1]).find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');	
+		}
+		for(var i = 0; i < $("span.function").length; i++){
+				$($($("span.function")[i]).children("label")[0]).html('&#92;( f_{' + (i + 1) + '}(x) &#92;)');
+		}
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+		MathJax.Hub.Queue(function(){
+			jscolor.installByClassName("jscolor");
+		});
+		//console.log(curves);
+		return rec.parent();
+	}
 	$("a#addp").click(function(){
 		//&#92; = \ in
-		$('<span class = "input function"><a href="#" id="delete"><i class = "fa fa-cut"></i></a><label></label><input id="f" type="text" placeholder="sin(cos(x) - 1)"></span>').insertAfter($("span.input.function").last()).find("label").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)<span class="equal"> &#92;( = &#92;) </span>');
+		if($("span.input.parameterized").length == 0){
+			$($('<span class = "input parameterized"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="xt">\(&#92;( &#92;_{1}(t) \)</label><input class="x" type="text" placeholder="cos(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="yt">\( y_{1}(t) \)</label><input class="y" type="text" placeholder="sin(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder="-4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder="4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').appendTo("div#parameters").find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');			
+		}
+		else{
+			$($('<span class = "input parameterized"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="xt">\(&#92;( &#92;_{1}(t) \)</label><input class="x" type="text" placeholder="cos(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="yt">\( y_{1}(t) \)</label><input class="y" type="text" placeholder="sin(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder="-4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder="4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').insertAfter($("span.input.parameterized").last()).find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');
+		}
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+		MathJax.Hub.Queue(function(){
+			jscolor.installByClassName("jscolor");
+			$("div#parameters").scrollLeft(($("span.input").width())*($("span.input").length) + 20);
+			P.a.push(0);
+			P.b.push(0);
+			curves.push(new Curve2d(tab1, tab2, "#3A539B", 3));		
+		});
 	});
 	$("a#plot").click(function(){
 		topcontext.clearRect(0, 0, cwidth, cheight);
@@ -464,7 +633,7 @@ $(document).ready(function(){
 			tab2.splice(0, tab2.length);
 		}
 		//To avoid drawing repeatedly
-		curves.splice(0, curves.length);
+		//curves.splice(0, curves.length);
 		/*expression = evaluateInput($("input#function"));
 		expression2 = evaluateInput($("input#function2"));*/
 		c = 0, e = 0, p = 1;
@@ -473,12 +642,7 @@ $(document).ready(function(){
 		n = 0, val = [], im=[];
 		context.clearRect(0, 0, cwidth, cheight);
 		val = [], im=[];
-		a = eval($("input#a").val());
-		b = eval($("input#b").val());
-		n = eval($("input#n").val());
 		//xs = xstep(a, b, 22);
-		xs = 0.1;
-		txs = xs;
 		//subdivide(-(cwidth/thestep)*xs, (cwidth/thestep)*txs, 1000, val);
 		/*for(var i = 0; i < val.length; i++){
 			var x = val[i];
@@ -486,8 +650,6 @@ $(document).ready(function(){
 			im2[i] = eval(expression2);
 		}*/	
 		//ys = ystep(Minimum(im), Maximum(im));
-		ys = 0.1;
-		tys = ys;
 		if(afterComma(txs) > 4){
 			if(beforeComma(txs) < 3){
 				if(beforeComma(txs) < 2){
@@ -541,7 +703,7 @@ $(document).ready(function(){
 			drawYAxis(origin.x);
 			drawOnX(origin.x, origin.y, txs, cwidth/thestep);
 			drawOnY(origin.x, origin.y, tys, 22);
-			drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+			drawOnMinusXs(origin.x, origin.y, txs, cwidth/thestep);
 			drawOnMinusY(origin.x, origin.y, tys, 22);
 		}
 		else{
@@ -614,47 +776,169 @@ $(document).ready(function(){
 			}
 		}, 250);
 		*/
-		txs = 0.5; tys = 0.1;
-		drawXAxis(origin.y);
-		drawYAxis(origin.x);
-		drawOnX(origin.x, origin.y, txs, cwidth/thestep);
-		drawOnY(origin.x, origin.y, tys, 22);
-		drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
-		drawOnMinusY(origin.x, origin.y, tys, 22);
-		var tab1 = [];
-		var tab2 = [];
-		subdivide(a, b, 200, tab1);
-		for(var j = 0; j < $("span.function").length; j++){
-			for(var i = j*tab1.length; i < (j+1)*tab1.length; i++){
-				if(j == 0){
-					x = tab1[i];
-				}
-				else{
-					x = tab1[i - (tab1.length*j)];
-				}
-				tab2[i] = eval(evaluateInput($($("span.function")[j]).children("input").val()));
-				console.log(evaluateInput($($("span.function")[j]).children("input").val()));
+		/*for(var j = 0; j < $("span.function").length; j++){
+			P.a[j] = $($("span.function")[j]).children("#a").val();
+			P.b[j] = $($("span.function")[j]).children("#b").val();
+			P.n[j] = $($("span.function")[j]).children("#n").val();
+			a = parseFloat(P.a[j]);
+			b = parseFloat(P.b[j]);
+			subdivide(a, b, 250, tab1);
+			for(var i = 0; i < tab1.length; i++){
+				x = tab1[i];
+				tab2[i] = eval(evaluateInput($($("span.function")[j]).children("input.f").val()));
 			}
-			curves.push(new Curve2d(tab1, tab2.slice(j*tab1.length, (j+1)*tab1.length), "rgba(" + Math.floor(255*Math.random()) + ", " + Math.floor(255*Math.random()) +  ", " + Math.floor(255*Math.random()) + ", 1)", 3));
+			curves.splice($("span.function").length - 1, 0,new Curve2d(tab1, tab2, "#" + $($("span.function")[j]).children(".jscolor").val(), 2));
+			console.log(curves);
+			tab1 = [];
+			tab2 = [];
 		}
-		for(var i = 0; i < curves.length; i++){
+		for(var j = 0; j < $("span.parameterized").length; j++){
+			a = parseFloat($($("span.parameterized")[j]).children("#a").val());
+			b = parseFloat($($("span.parameterized")[j]).children("#b").val());
+			subdivide(a, b, 250, tabt);
+			for(var i = 0; i < tabt.length; i++){
+				t = tabt[i];
+				tab1[i] = eval(evaluateInput($($("span.parameterized")[j]).children("input.x").val()));
+				tab2[i] = eval(evaluateInput($($("span.parameterized")[j]).children("input.y").val()));
+			}
+			curves.push(new Curve2d(tab1, tab2, "#" + $($("span.parameterized")[j]).children(".jscolor").val(), 3));
+			tabt = [];
+			tab1 = [];
+			tab2 = [];
+		}*/
+		/*for(var i = 0; i < curves.length; i++){
 			curves[i].draw();
-		}
-		/*var k = 0;
-		var myint = window.setInterval(function(){
-			if(k < 80){
-				if(k != 0){
-					(new Curve2d(tab1.slice(10*k - 1, 10*(k+1) + 1), tab2.slice(10*k - 1, 10*(k+1) + 1), "#1F3A93", 3)).draw();
+			expr = $($("span.function")[i]).children("input").val();
+			a = parseFloat(P.a[i]);
+			b = parseFloat(P.b[i]);
+			n = parseInt(P.n[i]);
+			drawRiemann(rectanglewidth, a, b, n, function(x){
+				return eval(evaluateInput(expr));
+			}, txs, tys, origin.x, origin.y);
+		}*/
+		$.getScript("http://localhost:3172/cvg.js").done(function(){
+			console.log("curves: " + curves);
+			var k = 0;
+			context.clearRect(0, 0, cwidth, cheight);
+			myint = window.setInterval(function(){
+				if(k < 25){
+					if(k != 0){
+						for(var i = 0; i < curves.length; i++){
+							(new Curve2d(curves[i].X.slice(10*k - 1, 10*(k+1) + 1), curves[i].Y.slice(10*k - 1, 10*(k+1) + 1), curves[i].color, curves[i].width)).draw();
+							cvg.addFrame(canvas);
+						}
+					}
+					else{
+						for(var i = 0; i < curves.length; i++){
+							(new Curve2d(curves[i].X.slice(10*k, 10*(k+1) + 1), curves[i].Y.slice(10*k, 10*(k+1) + 1), curves[i].color, curves[i].width)).draw();
+							cvg.addFrame(canvas);
+						}	
+					}
 				}
 				else{
-					(new Curve2d(tab1.slice(10*k, 10*(k+1) + 1), tab2.slice(10*k, 10*(k+1) + 1), "#1F3A93", 3)).draw();
+					cvg.render(Math.random());
+					window.clearInterval(myint);
+					html.find('script[src="http://localhost:3172/cvg.js"]').remove();
 				}
+				k++;
+			}, 80);
+		}).fail(function(){
+			/*for(var i = 0; i < curves[0].X.length; i++){
+				tab2[i] = ((curves[0].Y)[i] + (curves[1].Y)[i])/2;
+			}
+			console.log(tab2);*/
+			//curves[2] = new Curve2d(curves[0].X, tab2, "#3A539B", 3);
+			//console.log("Failed to load!");
+			xs = xstep();
+			ys = ystep();
+			//The y-axis is half long than the x-axis, hence the times 2
+			if(xs >= ys){
+				txs = xs;
+				tys = xs;
 			}
 			else{
-				window.clearInterval(myint);
+				txs = ys;
+				tys = ys;
 			}
-			k++;
-		}, 100);*/
+			context.clearRect(0, 0, cwidth, cheight);
+			context.setLineDash([]);
+			drawXAxis(origin.y, "#95A5A6");
+			drawYAxis(origin.x, "#95A5A6");
+			drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+			drawOnY(origin.x, origin.y, tys, 22);
+			drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+			drawOnMinusY(origin.x, origin.y, tys, 22);
+			var k = 0;
+			//window.clearInterval(myint);
+			if(typeof(myint) == "undefined"){
+				console.log("undefined case");
+				myint = window.setInterval(function(){
+					if(k < 11){
+						if(k == 0){
+							for(var i = 0; i < curves[0].X.length; i++){
+								tab2[i] = curves[0].Y[i];
+							}
+						}
+						else{
+							for(var i = 0; i < curves[0].X.length; i++){
+								//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
+								tab2[i] = curves[1].Y[i] + (10 - k)*(curves[0].Y[i] - curves[1].Y[i])/10;
+							}
+						}						
+						//console.log(k);
+						context.clearRect(0, 0, cwidth, cheight);
+						context.setLineDash([]);
+						drawXAxis(origin.y, "#95A5A6");
+						drawYAxis(origin.x, "#95A5A6");
+						drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnY(origin.x, origin.y, tys, 22);
+						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnMinusY(origin.x, origin.y, tys, 22);
+						console.log(tab2);
+						(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+					}
+					else{
+						window.clearInterval(myint);	
+						tab2 = [];	
+					}
+					k++;
+				}, 150);
+			}else{
+				window.clearInterval(myint);
+				console.log("defined case");
+				console.log(tab2);
+				myint = window.setInterval(function(){
+					if(k < 11){
+						if(k == 0){
+							for(var i = 0; i < curves[0].X.length; i++){
+								tab2[i] = curves[0].Y[i];
+							}
+						}
+						else{
+							for(var i = 0; i < curves[0].X.length; i++){
+								//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
+								tab2[i] = curves[1].Y[i] + (10 - k)*(curves[0].Y[i] - curves[1].Y[i])/10;;
+							}						
+						}
+						//console.log(k);
+						context.clearRect(0, 0, cwidth, cheight);
+						context.setLineDash([]);
+						drawXAxis(origin.y, "#95A5A6");
+						drawYAxis(origin.x, "#95A5A6");
+						drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnY(origin.x, origin.y, tys, 22);
+						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnMinusY(origin.x, origin.y, tys, 22);
+						console.log(tab2);
+						(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+					}
+					else{
+						window.clearInterval(myint);		
+					}
+					k++;
+				}, 150);
+			}
+		});
 	});
 	$("a#save").click(function(){
 		Canvas2Image.saveAsPNG(canvas, cwidth, cheight);
@@ -711,10 +995,10 @@ $(document).ready(function(){
 			im2[i] = eval(expression2);
 		}
 		context.clearRect(0, 0, cwidth, cheight);
-		drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
-		drawRiemann(rectanglewidth, a, b, n, function(x){
-			return eval(expression);
-		}, txs, tys, origin.x, origin.y);
+		//drawCurve(curvewidth, val, im, txs, tys, origin.x, origin.y, curvecolor);
+		//drawRiemann(rectanglewidth, a, b, n, function(x){
+		//	return eval(expression);
+		//}, txs, tys, origin.x, origin.y);
 		drawCurve(curvewidth, val, im2, txs, tys, origin.x, origin.y, "#F9690E");
 		drawXAxis(origin.y);	
 		drawYAxis(origin.x);
@@ -908,6 +1192,10 @@ $(document).ready(function(){
 		drawOnMinusX(origin.x, origin.y, txs, (cwidth/thestep) - c);
 		drawOnMinusY(origin.x, origin.y, tys, 28 - e);
 	});
+	//Rotate plot clock-wise
+	$("a#rotate_cw").click(function(){
+		console.log("Rotate..");
+	});
 	$("canvas#graph").keypress(function(e){
 		e.preventDefault();
 	});
@@ -971,13 +1259,237 @@ $(document).ready(function(){
 		}
 		topcontext.stroke();
 	});
-	$("body").on("click", "span.input input",function(){
-		$("span.input").removeClass("selected");
+	$("body").on("click", "span.input.function a.delete",function(){
+		var index = $("span.input").index($(this).parent());
+		if($("span.input").length > 1){
+			$(this).parent().remove();
+			for(var i = 0; i < $("span.function").length; i++){
+				$($($("span.function")[i]).children("label")[0]).html('&#92;( f_{' + (i + 1) + '}(x) &#92;)');
+			}
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+			curves.splice(index, 1);
+			P.a.splice(index, 1);
+			P.b.splice(index, 1);
+			//console.log(curves);
+		}
+	});
+	$("body").on("click", "span.input.function a.dropdown, span.input.parameterized a.dropdown", function(){
+		$(this).hide();
+		($(this).parent()).siblings().children("a.dropdown").hide();
 		$(this).parent().addClass("selected");
+		$(this).parent().siblings().removeClass("selected");
+		$(this).parent().siblings().css("opacity", "0.5");
+		$($("div#fsettings span.thickness")[curves[$("span.input").index($(this).parent())].width - 2]).click();
+		$("div#fsettings").slideDown();
 	});
-	$("body").on("blur", "span.input input",function(){
-		$("span.input").removeClass("selected");
+	$("body").on("click", "div#fsettings span.scontainer span.thickness", function(){
+		$(this).parent().addClass("selected");
+		$(this).parent().siblings().removeClass("selected");
 	});
+	$("body").on("click", "div#fsettings button#divideb", function(){
+		//Number of divisions
+		console.log("curves: ");
+				for(var l = 0; l < curves.length; l++){
+					console.log(curves[l].X);
+				}
+		divnum = $("input#divide").val();
+		if(divnum > 0){
+			//Index of current function to divide
+			index = $("span.input").index($("span.input.selected")); 
+			for(var i = 0; i < divnum; i++){
+				var curr = addNewFunct(index + i + 1);
+				a = P.a[index] + i*(P.b[index] - P.a[index])/divnum;
+				b = P.a[index] + (i+1)*(P.b[index] - P.a[index])/divnum;
+				$(curr.children("input")[0]).val($($("span.input.selected").children("input")[0]).val());
+				$(curr.children("input")[1]).val(P.a[index] + i*(P.b[index] - P.a[index])/divnum);
+				$(curr.children("input")[2]).val(P.a[index] + (i+1)*(P.b[index] - P.a[index])/divnum);	
+				MathJax.Hub.Queue(function(){
+					//$(curr.children("a.edit")).click();
+				});
+				//MathJax.Hub.Queue(function(){
+				tab1 = [];
+				tab2 = [];
+				tabt = [];
+				P.a[index + i + 1] = a;
+				P.b[index + i + 1] = b;
+				if($("span.input.selected").hasClass("function")){
+					subdivide(a, b, 250, tab1);
+					for(var j = 0; j < tab1.length; j++){
+						x = tab1[j];
+						tab2[j] = eval(evaluateInput($($("span.input.selected").children("input")[0]).val()));
+					}	
+				}
+				if($("span.input.selected").hasClass("parameterized")){
+					subdivide(a, b, 250, tabt);
+					for(var j = 0; j < tabt.length; j++){
+						t = tabt[j];
+						tab1[j] = eval(evaluateInput($($("span.input.selected").children("input")[0]).val()));
+						tab2[j] = eval(evaluateInput($($("span.input.selected").children("input")[1]).val()));
+					}	
+				}
+				curves[index + i + 1].X = tab1;
+				curves[index + i + 1].Y = tab2;
+				curves[index + i + 1].width = curves[index].width;
+				tab1 = [];
+				tab2 = [];
+				//});
+			}
+			MathJax.Hub.Queue(function(){
+				$("button#saveb").click();
+				$("span.input.selected").children("a.delete").click();
+				tab1 = [];
+				tab2 = [];
+			});
+		}
+	});
+	$("body").on("click", "div#fsettings button#saveb", function(){
+		current_index = $("span.input").index($("span.input.selected"));
+		$("div#fsettings").slideUp();
+		$("div#parameters").children("span").css("opacity", "1");
+		$("div#parameters").children("span").children("a.dropdown").show();
+		curves[current_index].width = $("span.scontainer").index($("span.scontainer.selected")) + 2;
+	});
+	$("body").on("click", "span.input.function a.edit, span.input.parameterized a.edit", function(){
+		$(this).parent().siblings().children("a.save").hide();
+		$(this).parent().siblings().children("a.save").siblings("a.edit").show();
+		$($(this).parent().siblings().children("a.save").siblings("label")[0]).show();
+		$(this).parent().siblings().children("a.save").siblings("label").removeClass("selec");
+		$(this).parent().siblings().children("a.save").siblings("input:not(.jscolor)").hide();
+		$(this).parent().siblings().children("a.save").siblings("a.next").hide();
+		$(this).parent().siblings().children("a.save").siblings("a.previous").hide();
+
+		$(this).hide();
+		$(this).siblings("a.save").show();
+		$(this).siblings("input").addClass("selected");
+		for(var i = 1; i < 4; i++){
+			$($(this).siblings("input")[i]).hide();
+			$($(this).siblings("label")[i]).hide();
+		}
+		$(this).siblings("label").removeClass("selec");
+		$($(this).siblings("input")[0]).show();
+		$($(this).siblings("input"))[0].focus();
+		$($(this).siblings("a.next")[0]).show();
+		$($(this).siblings("a.previous")[0]).show();
+	});
+	$("body").on("click", "span.input.function a.save, span.input.parameterized a.save", function(){
+		$(this).hide();
+		$(this).siblings("a.edit").show();
+		$($(this).siblings("label")[0]).show();
+		if($(this).parent().hasClass("parameterized")){
+			$($(this).siblings("label")[1]).show();
+		}
+		$(this).siblings("label").removeClass("selec");
+		$(this).siblings("input:not(.jscolor)").hide();
+		$(this).siblings("a.next").hide();
+		$(this).siblings("a.previous").hide();
+		current_index = $("span.input").index($(this).parent());
+		a = parseFloat(P.a[current_index]);
+		b = parseFloat(P.b[current_index]);
+		if($(this).parent().hasClass("function")){
+			subdivide(a, b, 250, tab1);
+			for(var i = 0; i < tab1.length; i++){
+				x = tab1[i];
+				tab2[i] = eval(evaluateInput($($("span.input")[current_index]).children("input.f").val()));
+			}	
+		}
+		if($(this).parent().hasClass("parameterized")){
+			subdivide(a, b, 250, tabt);
+			for(var i = 0; i < tabt.length; i++){
+				t = tabt[i];
+				tab1[i] = eval(evaluateInput($($("span.input")[current_index]).children("input.x").val()));;
+				tab2[i] = eval(evaluateInput($($("span.input")[current_index]).children("input.y").val()));
+			}	
+		}
+		console.log(a);
+		curves[current_index].X = tab1;
+		curves[current_index].Y = tab2;
+		tab1 = [];
+		tab2 = [];
+		//console.log("curves: ");
+		/*for(var l = 0; l < curves.length; l++){
+			console.log(curves[l].X);
+		}*/
+	});
+	$("body").on("click", "span.input.function a.next, span.input.parameterized a.next", function(){
+		//Current selected input index 
+		var inp = $($(this).parent()).children("a.next").index($(this));
+		index = $("span.input").index($(this).parent());
+		if(inp == 1){
+			P.a[index] = parseFloat($("input.selected").val());
+		}
+		if(inp == 2){
+			P.b[index] = parseFloat($("input.selected").val());
+		}
+		$("span.input").children("input").removeClass("selected");
+		$(this).hide();
+		$(this).parent().children("input:not(.jscolor)").hide();
+		$(this).parent().children("label").hide();
+		$(this).parent().children("a.previous").hide();
+		if($(this).parent().children("a.next").index($(this)) == 3){
+			$($($(this).parent().children("input"))[0]).show();
+			$($($(this).parent().children("label"))[0]).show();
+			$(this).siblings("label").removeClass("selec");
+			$($($(this).parent().children("a.next"))[0]).show();
+			$($($(this).parent().children("a.previous"))[0]).show();
+			$($(this).parent().children("input")[0]).addClass("selected");
+			$($($(this).parent().children("input"))[0]).focus();
+		}
+		else{
+			$($($(this).parent().children("input"))[$(this).parent().children("a.next").index($(this)) + 1]).show();
+			$($($(this).parent().children("label"))[$(this).parent().children("a.next").index($(this)) + 1]).show();
+			$($($(this).parent().children("label"))[$(this).parent().children("a.next").index($(this)) + 1]).addClass("selec");
+			$($($(this).parent().children("a.next"))[$(this).parent().children("a.next").index($(this)) + 1]).show();
+			$($($(this).parent().children("a.previous"))[$(this).parent().children("a.next").index($(this)) + 1]).show();
+			$($(this).parent().children("input")[$(this).parent().children("a.next").index($(this)) + 1]).addClass("selected");
+			$($($(this).parent().children("input"))[$(this).parent().children("a.next").index($(this)) + 1]).focus();
+		}
+	});
+	$("body").on("click", "span.input a.previous, span.input.parameterized a.previous", function(){
+		$(this).parent().children("input").removeClass("selected");
+		$(this).hide();
+		$(this).parent().children("input:not(.jscolor)").hide();
+		$(this).parent().children("label").hide();
+		$(this).parent().children("a.next").hide();
+		if($(this).parent().children("a.previous").index($(this)) == 0){
+			$($($(this).parent().children("input"))[3]).show();
+			$($($(this).parent().children("label"))[3]).show();
+			$(this).siblings("label").addClass("selec");
+			$($($(this).parent().children("a.next"))[3]).show();
+			$($($(this).parent().children("a.previous"))[3]).show();
+			$($(this).parent().children("input")[3]).addClass("selected");
+			$($($(this).parent().children("input"))[3]).focus();
+		}
+		else{
+			$($($(this).parent().children("input"))[$(this).parent().children("a.previous").index($(this)) - 1]).show();
+			$($($(this).parent().children("label"))[$(this).parent().children("a.previous").index($(this)) - 1]).show();
+			$($($(this).parent().children("label"))[$(this).parent().children("a.previous").index($(this)) - 1]).addClass("selec");
+			$($($(this).parent().children("a.next"))[$(this).parent().children("a.previous").index($(this)) - 1]).show();
+			$($($(this).parent().children("a.previous"))[$(this).parent().children("a.previous").index($(this)) - 1]).show();
+			$($(this).parent().children("input")[$(this).parent().children("a.previous").index($(this)) - 1]).addClass("selected");
+			$($($(this).parent().children("input"))[$(this).parent().children("a.previous").index($(this)) - 1]).focus();
+		}
+	});
+	/*$("body").on("blur", "span.input input",function(){
+		$(this).parent().children("input").removeClass("selected");
+	});*/
+	$("body").on("click", "span.input.parameterized a.delete",function(){
+		var index = $("span.input").index($(this).parent());
+		console.log(index);
+		console.log(curves);
+		if($("span.input").length > 1){
+			var index = $("span.parameterized").index($(this).parent());
+			$(this).parent().remove();
+			for(var i = 0; i < $("span.parameterized").length; i++){
+				$($($("span.parameterized")[i]).children("label.xt")).html('&#92;( x_{' + (i + 1) + '}(t) &#92;)');
+				$($($("span.parameterized")[i]).children("label.yt")).html('&#92;( y_{' + (i + 1) + '}(t) &#92;)');
+			}
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
+		}
+		console.log(curves);
+	});
+	$("body").on("change", ".jscolor",function(){
+		curves[$("span.input").index($(this).parent())].color = "#" + $(this).val();
+	})
 	$("a#center").hover(function(){
 		$("span#label").text("Center").show();
 	}, function(){
