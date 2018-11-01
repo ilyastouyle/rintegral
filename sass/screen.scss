@@ -4,11 +4,13 @@
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
 @import "compass/reset";
+@import "palette";
+
 
 body
 {	
-	background-color: #ececec;
-	color: #3A539B;
+	//background-color: $color3;
+	color: $color1;
 	font-family: Open-Light;
 	text-align: center;
 	background-repeat: no-repeat;
@@ -18,142 +20,169 @@ body
 	}
 	header{
 		display: flex;
-		background-color: #3A539B;
+		//background-color: $color1;
 		clear: both;
-		color: #ececec;
-		width: 100%;
+		color: $color4;
 		margin-bottom: 5px;
+		padding: 4px;
+		width: 100%;
+		height: 100px;
 		img{
+			width: 100%;
+			height: 100%;
 			margin: auto;
 			display: block;
 			float: left;
 			clear: left;
 		}
 	}
-	div#parameters{
-		background-color: #3A539B;
-		color: #ececec;
-		height: auto;
-		padding: 0;
-		padding-right: 8px;
-		padding-left: 8px;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		overflow-x: scroll;
-		white-space: nowrap;
-		span.input{
-			text-align: center;
-			border-right: 5px solid #ececec;
-			border-left: 5px solid #ececec;
-			display: inline-block;
-			padding-right: 4px;
-			margin-right: 12px;
-			color: #ececec;
-			background-color: #1E8BC3;
-			//background-color: #336E7B;
-			label{
-				padding: 3px;
-				padding-right: 8px;
-				padding-left: 8px;
-			}
-			input{
-				width: 0px;
-				background-color: transparent;
-				border: none;
-				padding: 3.5px;
-				padding-right: 1.5px;
-				padding-left: 1.5px;
-				color: #ececec;
+	div#main{
+		height: 100%;
+	    width: 100%;
+	    overflow: hidden;
+		//background: -webkit-linear-gradient(43deg, rgb(35, 100, 158), rgb(76, 150, 224));
+		//background: linear-gradient(43deg, rgb(35, 100, 158), rgb(76, 150, 224));
+		div#parameters{
+			//background-color: $color1;
+			border-bottom: 5px solid $color1;
+			color: $color4;
+			height: auto;
+			padding: 0;
+			padding-right: 8px;
+			padding-left: 8px;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			overflow: hidden;
+			white-space: nowrap;
+			width: 100%;
+    		height: 100%;
+			//padding-bottom: 17px; /* Increase/decrease this value for cross-browser compatibility */
+    		box-sizing: content-box; /* So the width will be 100% + 17px */
+			span.input{
 				text-align: center;
-				visibility: hidden;
-			}
-			input:not(.jscolor){
-				display: none;
-			}
-			input.jscolor{
-				visibility: visible;
-				width: 22px;
-				border-radius: 75%;
-				border: 2px solid #ececec;
-				cursor: pointer;
-			}
-			label.y{
-				border-left: none;
-			}
-			label.value{
-				display: none;
-			}
-			label:not(.fx){
-				border-left: 2px solid #ececec; 
-			}
-			label.selec:not(.fx){
-				border-left: 0; 
-			}
-			label.xt, label.yt{
-				border-left: 0;
-			}
-			a{
-				color: #ececec;
-				padding: 3px;
-				padding-right: 5px;
-			}
-			a.delete{
-				margin-left: 3px;
-				padding: 3px;
+				//border-right: 5px solid $color4;
+				//border-left: 5px solid $color4;
+				border-bottom: 3px solid $color4;
+				//border-top: 4px solid $color4;
+				border-radius: 4px;
+				display: inline-block;
 				padding-right: 4px;
-				margin-right: 0px;
-				border-right: 2px solid #ececec;
+				margin-right: 12px;
+				//color: $color1;
+				color: $color4;
+				background-color: $color1;
+				//background-color: #1E8BC3;
+				//background-color: #336E7B;
+				padding: 4px;
+				label{
+					padding: 3px;
+					padding-right: 8px;
+					padding-left: 8px;
+				}
+				input{
+					width: 0px;
+					background-color: transparent;
+					border: none;
+					padding: 3.5px;
+					padding-right: 1.5px;
+					padding-left: 1.5px;
+					color: $color4;
+					text-align: center;
+					visibility: hidden;
+				}
+				input:not(.jscolor){
+					display: none;
+				}
+				input.jscolor{
+					visibility: visible;
+					width: 22px;
+					border-radius: 75%;
+					border: 2px solid $color4;
+					cursor: pointer;
+				}
+				label.y{
+					border-left: none;
+				}
+				label.value{
+					display: none;
+				}
+				label:not(.fx){
+					border-left: 2px solid $color4; 
+				}
+				label.selec:not(.fx){
+					border-left: 0; 
+				}
+				label.xt, label.yt{
+					border-left: 0;
+				}
+				label.yt{
+					display: none;
+				}
+				a{
+					color: $color4;
+					padding: 3px;
+					padding-right: 5px;
+				}
+				a.delete{
+					margin-left: 3px;
+					padding: 3px;
+					padding-right: 4px;
+					margin-right: 0px;
+					//border-right: 4px solid $color4;
+					padding-top: 5px;
+				}
+				a.dropdown{
+					//border-right: 4px solid $color4;
+				}
+				a.edit{
+					//border-right: 4px solid $color4;
+				}
+				a.save{
+					//border-right: 4px solid $color4;
+					display: none;
+				}
+				a.previous{
+					display: none;
+				}
+				a.next{
+					display: none;
+				}
 			}
-			a.dropdown{
-				border-right: 2px solid #ececec;
+			//span:hover{
+			//	input{
+			//		visibility: visible;
+			//		width: 20px;
+			//	}
+			//}
+			span.edit{
+				
+			}	
+			input.selected.f, input.selected.x, input.selected.y, input.selected.value{
+				visibility: visible;
+				width: 70px;
+				//border-bottom: 2px solid $color4;
 			}
-			a.edit{
-				border-right: 2px solid #ececec;
+			input.selected.jscolor{
+				width: 35px;
 			}
-			a.save{
-				border-right: 2px solid #ececec;
-				display: none;
+			input#function{
+				width: 200px;
 			}
-			a.previous{
-				display: none;
-			}
-			a.next{
-				display: none;
-			}
-		}
-		//span:hover{
-		//	input{
-		//		visibility: visible;
-		//		width: 20px;
-		//	}
-		//}
-		span.edit{
-			
-		}	
-		input.selected.f, input.selected.x, input.selected.y, input.selected.value{
-			visibility: visible;
-			width: 70px;
-			border-bottom: 2px solid #ececec;
-		}
-		input.selected.jscolor{
-			width: 35px;
-		}
-		input#function{
-			width: 200px;
 		}
 	}
 	div#fsettings{
-		color: #ececec;
-		background-color: #3A539B;
+		color: $color4;
+		background-color: $color1;
 		overflow: hidden;
 		text-align: center;
 		padding: 10px 0px;
 		display: none;
 		div.row{
+			display: flex;
 			padding: 6px 0px;
 			margin-left: auto;
 			margin-right: auto;
-			width: 80%;
+			width: 75%;
 			label{
 				display: block;
 				margin-bottom: 20px;
@@ -162,7 +191,7 @@ body
 				cursor: pointer;
 				margin-left: auto;
 				margin-bottom: 4px;
-				background-color: #ececec;
+				background-color: $color4;
 				display: inline-block;
 				vertical-align: middle;
 				border-radius: 50%;
@@ -172,11 +201,11 @@ body
 				display: inline-block;
 				width: 28px;
 				height: 28px;
-				border: 2px solid #3A539B;
+				border: 2px solid $color1;
 				border-radius: 50%;
 			}
 			span.scontainer.selected{
-				border: 2px solid #ececec;
+				border: 2px solid $color4;
 				border-radius: 50%;
 			}
 			span#thn{
@@ -206,83 +235,107 @@ body
 					width: 50px;
 					background-color: #1E8BC3;
 					border: none;
-					border-bottom: 2px solid #ececec;
-					color: #ececec;
+					border-bottom: 2px solid $color4;
+					color: $color4;
 					text-align: center;
 					padding: 6px;
 					padding-right: 0;
 				}
 				input#divide{
-					border-right: 2px solid #ececec;
+					border-right: 2px solid $color4;
+					margin-right: -2px;
 				}
 				button{
 					cursor: pointer;
 					border: none;
-					border-bottom: 2px solid #ececec;
+					border-bottom: 2px solid $color4;
 					padding: 6px;
 					padding-right: 8px;
 					padding-left: 8px;
+					margin: 2px;
 					background-color: #1E8BC3;
-					color: #ececec;
+					color: $color4;
+				}
+				div.container{
+					display: inline-block;
+					margin: auto;
+					width: 90%;
+					button{
+						margin: auto;
+					}
+					button:not(:last-child){
+						margin-right: 0px;
+						margin-bottom: 4px;	
+					}
 				}
 			}
 		}
 		div.row.two{
 			div.column:nth-child(1){
-				width: 40%;
+				width: 50%;
 			}
 		}
 	}
 	nav#controlbar{
+		width: 100%;
 		display: block;
 		margin-right: auto;
 		margin-left: auto;
-		margin-top: 5px;
+		margin-bottom: 5px;
 		text-align: left;
 		background-repeat: no-repeat;
 	    background-attachment: fixed;
 		div#upperdiv{
 			width: 100%;
-			background-color: #3A539B;
+			//background-color: $color1;
+			//box-shadow: 0px 2px 1px 1px grey;
 			nav#wrapper{
 				display: flex;
 				margin-left: auto;
 				margin-right: auto;
-				width: 85%;
+				width: 90%;
 			    nav{
+			    	text-align: center;
+			    	//background-color: $color1;
 			    	display: inline-block;
-			    	padding: 10px;
+			    	//padding: 10px;
 			    	padding-bottom: 12.5px;
 			    	padding-top: 12.5px;
-			    	color: #ececec;
+			    	//color: $color4;
+			    	color: $color1;
 			    	i{
-			    		color: #ECF0F1;
+			    		//color: #ECF0F1;
+			    		//color: $color4;
+			    		color: $color1;
+			    	}
+			    	span{
+			    		padding: 6px 8px;
+			    		display: inline-block;
+			    		//background-color: $color1;
+			    		//border: 3px solid $color4;
+			    		border-radius: 4px;
+			    		margin-right: 5px;
+			    		position:relative;
 			    	}
 			    	a{
-						display: inline-block;
-						color: #ECF0F1;
+						display: inline;
+						//color: #ECF0F1;
+						color: $color4;
 						padding: 4px;
-						padding-right: 10px;
-						border-right: 2px solid #ececec;
+						//padding-right: 12px;
+						//border-right: 2px solid $color4;
 						text-decoration: none;
+						vertical-align: middle;
 						span{
 							display: none;
 						}
 					}
-			    	a#settings{
-					float: right;
-					}
 					a.control{
 						float: right;
 						padding-top: 6px;
-						border: 2px solid #ececec;
+						border: 2px solid $color1;
 					}
-					a#center{
-						border-right: none;
-					}
-					a#settings{
-						border-right: none;
-					}
+					
 					span#status{
 						display: inline-block;
 						float: right;
@@ -295,14 +348,26 @@ body
 						padding: 4px;
 						margin-right: 6px;
 					}
+					nav{
+						width: 100%;
+						color: $color4;
+						//border-bottom: 3px solid yellow;
+					}
 			    }
 			    nav#buttons{
-			    	width: 55%;
-			    	border-right: 4px solid #ececec;
+			    	width: 40%;
+			    	//border-right: 4px solid $color4;
+			    }
+			    nav#img{
+			    	width: 20%;
+			    	//background-color: green;
+			 		a{
+			 			border: none;
+			 		}
 			    }
 			    nav#controlbuttons{
 			    	width: 40%;
-			    	clear: both;
+			    	//clear: both;
 			    }
 			}
 		}
@@ -345,17 +410,17 @@ body
 						border-radius: 100%;
 					}
 					a.selected{
-						color: #ececec;
+						color: $color4;
 						i{
 							visibility: visible;
 						}
 					}
 					a.thickness.selected{
-						background-color: #3A539B;
-						color: #ececec;
+						background-color: $color1;
+						color: $color4;
 					}
 					a.black{
-						background-color: #3A539B;
+						background-color: $color1;
 					}
 					a.pomegranate{
 						background-color: #F22613;
@@ -374,14 +439,14 @@ body
 					}
 					a.thickness{
 						padding: 3px;
-						border: 2px solid #3A539B;
+						border: 2px solid $color1;
 						i{
-							border-right: 1px solid #3A539B;
+							border-right: 1px solid $color1;
 						}
 					}
 				}
 				tr td#curvesettings {
-					border-right: 3px solid #3A539B;
+					border-right: 3px solid $color1;
 				}
 			}
 		}
@@ -395,7 +460,7 @@ body
 			margin-right: auto;
 			margin-left: auto;
 			position: relative;
-			canvas#graph{
+			canvas#graph{ 
 				display: block;
 				margin-right: auto;
 				margin-left: auto;
@@ -422,11 +487,11 @@ body
 		padding-bottom: 20px;
 		padding-right: 5%px;
 		padding-left: 5%px;
-		background-color: #3A539B;
-		color: #ececec;
+		background-color: $color1;
+		color: $color4;
 	}
 	footer a{
-		color: #ececec;
+		color: $color4;
 		text-decoration: none;
 	}
 }

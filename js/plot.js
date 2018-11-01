@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	
+	
 	var n = 10, p = 1, d = 0, c = 0, e = 0, txs = 0, tys = 0, fn = 1;
 	var indexcs = 0;//index of the current span.input for which settings should be saved
 	var P = {a:[0, 0], b:[0, 0], n:[0]}//Initial values for both initial curves
@@ -15,6 +17,7 @@ $(document).ready(function(){
 	var nbc = 1;//Number of curves
 	var curves = [];//Table containing all current curves
 	var subdivision = new Array();//Current subdivision table
+	var durations = []; //Duration of each animation
 	var canvas = document.getElementById("graph");
 	var topcanvas = document.getElementById("toplayer");
 	var context = canvas.getContext("2d");
@@ -101,7 +104,7 @@ $(document).ready(function(){
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.thick").siblings(".thickness").removeClass("selected");
 			break;
 	}
-	switch(rectanglecolor){
+	switch(rectanglecolor){03012048193
 		case "#1F3A93":
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").addClass("selected");
 			$("nav#controlbar div#settingsdiv table tr td#rectanglesettings a.black").siblings(".color").removeClass("selected");
@@ -574,9 +577,6 @@ $(document).ready(function(){
 			}
 		}
 	});
-	$("a#add").click(function(){
-		addNewFunct($("span.input.function").length);
-	});
 	function addNewFunct(nb){
 		//&#92; = \ in
 		//console.log(curves);
@@ -593,10 +593,10 @@ $(document).ready(function(){
 			curves.splice(nb, 0, new Curve2d(tab1, tab2, "#3A539B", 3));
 		}
 		if($("span.input.function").length == 0){
-			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').prependTo("div#parameters").find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');
+			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="save"><i class = "fa fa-floppy-o"></i></a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="edit"><i class = "fa fa-pencil"></i></a><input class="jscolor" value="#3A539B"></span>').prependTo("div#parameters").find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');
 		}
 		else{
-			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').insertAfter($("span.input")[nb - 1]).find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');	
+			var rec = $('<span class = "input function"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="save"><i class = "fa fa-floppy-o"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="fx">&#92;(f_{1}(x)&#92;)</label><input class="f" type="text" placeholder="sin(cos(x) - 1)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder = "-5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder = "5"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(n&#92;)</label><input class ="value" type="text" id="n" maxlength="5" value="" placeholder = "100"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="edit"><i class = "fa fa-pencil"></i></a><input class="jscolor" value="#3A539B"></span>').insertAfter($("span.input")[nb - 1]).find("label.fx").html('&#92;( f_{' + ($("span.function").length) + '}(x) &#92;)');	
 		}
 		for(var i = 0; i < $("span.function").length; i++){
 				$($($("span.function")[i]).children("label")[0]).html('&#92;( f_{' + (i + 1) + '}(x) &#92;)');
@@ -608,13 +608,120 @@ $(document).ready(function(){
 		//console.log(curves);
 		return rec.parent();
 	}
+	function morph(curve1, curve2, time /*time in seconds*/, nbf /*number of frames*/,executewithin, executeafter){
+		k = 0;
+		tab2 = [];
+		var maininterval = window.setInterval(function(){
+			if(k <= nbf){
+				if(k == 0){
+					for(var i = 0; i < curve1.X.length; i++){
+						tab2[i] = curve1.Y[i];
+					}
+				}
+				else{
+					for(var i = 0; i < curve1.X.length; i++){
+						//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
+						tab2[i] = curve2.Y[i] + (nbf - k)*(curve1.Y[i] - curve2.Y[i])/nbf;
+					}
+				}						
+				//console.log(tab2);
+				executewithin();
+				(new Curve2d(curve1.X, tab2, "#3A539B", 3)).draw();
+				//console.log("Iteration number " + k);
+			}
+			else{
+				window.clearInterval(maininterval);	
+				executeafter();
+				//tab2 = [];	
+			}
+			k++;
+		}, ((time/nbf)*1000));
+		return maininterval;
+	}
+	function morphp(curve1, curve2, time /*time in seconds*/, nbf /*number of frames*/,executewithin, executeafter){
+		k = 0;
+		tab2 = [];
+		var maininterval = window.setInterval(function(){
+			if(k <= nbf){
+				if(k == 0){
+					for(var i = 0; i < curve1.X.length; i++){
+						tab1[i] = curve1.X[i];
+						tab2[i] = curve1.Y[i];
+					}
+				}
+				else{
+					for(var i = 0; i < curve1.X.length; i++){
+						//console.log((curve2.Y)[i] + (curve1.Y)[i])/2
+						tab1[i] = k*(curve2.X[curve2.X.length - 1 - i] - curve1.X[i])/nbf + curve1.X[i];
+						var ai = (curve1.Y[i] - curve2.Y[curve2.Y.length - 1 - i])/(curve1.X[i] - curve2.X[curve2.X.length - 1 - i]);
+						var bi = curve1.Y[i] - ai*curve1.X[i];
+						tab2[i] = ai*tab1[i] + bi;
+					}
+				}						
+				//console.log(tab2);
+				executewithin();
+				(new Curve2d(tab1, tab2, "#3A539B", 3)).draw();
+				//console.log("Iteration number " + k);
+			}
+			else{
+				window.clearInterval(maininterval);	
+				executeafter();
+				//tab2 = [];	
+			}
+			k++;
+		}, ((time/nbf)*1000));
+		return maininterval;
+	}
+	$("a#add").click(function(){
+		addNewFunct($("span.input.function").length);
+	});
 	$("a#addp").click(function(){
 		//&#92; = \ in
 		if($("span.input.parameterized").length == 0){
-			$($('<span class = "input parameterized"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="xt">\(&#92;( &#92;_{1}(t) \)</label><input class="x" type="text" placeholder="cos(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="yt">\( y_{1}(t) \)</label><input class="y" type="text" placeholder="sin(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder="-4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder="4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').appendTo("div#parameters").find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');			
+			$($('<span class = "input parameterized">\
+			<a href="#" class="delete"><i class = "fa fa-cut"></i></a>\
+			<a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a>\
+			<a href="#" class="save"><i class = "fa fa-floppy-o"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="xt">\( x_{1}(t) \)</label><input class="x" type="text" placeholder="cos(t)">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="yt">\( y_{1}(t) \)</label><input class="y" type="text" placeholder="sin(t)">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="value">\(a\)</label><input class ="value" type="text" id="a" maxlength="8" value=""\
+			placeholder="-4">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="value">\(b\)</label><input class ="value" type="text" id="b" maxlength="8" value=""\
+			placeholder="4">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="edit"><i class = "fa fa-pencil"></i></a>\
+			<input class="jscolor" value="#3A539B">\
+			</span>').appendTo("div#parameters").find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');			
 		}
 		else{
-			$($('<span class = "input parameterized"><a href="#" class="delete"><i class = "fa fa-cut"></i></a><a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a><a href="#" class="edit">Edit</a><a href="#" class="save">Save</a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="xt">\(&#92;( &#92;_{1}(t) \)</label><input class="x" type="text" placeholder="cos(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="yt">\( y_{1}(t) \)</label><input class="y" type="text" placeholder="sin(t)"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(a&#92;)</label><input class ="value" type="text" id="a" maxlength="8" value="" placeholder="-4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a><label class="value">&#92;(b&#92;)</label><input class ="value" type="text" id="b" maxlength="8" value="" placeholder="4"><a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a><input class="jscolor" value="#3A539B"></span>').insertAfter($("span.input.parameterized").last()).find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');
+			$($('<span class = "input parameterized">\
+			<a href="#" class="delete"><i class = "fa fa-cut"></i></a>\
+			<a href="#" class="dropdown"><i class="fa fa-angle-down fa-lg"></i></a>\
+			<a href="#" class="save"><i class = "fa fa-floppy-o"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="xt">&#92;( x_{1}(t) &#92; )</label><input class="x" type="text" placeholder="cos(t)">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="yt">&#92;( y_{1}(t) &#92;)</label><input class="y" type="text" placeholder="sin(t)">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="value">&#92;( a &#92; )</label><input class ="value" type="text" id="a" maxlength="8" value=""\
+			placeholder="-4">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="previous"><i class="fa fa-angle-left fa-lg"></i></a>\
+			<label class="value">&#92;( b &#92; )</label><input class ="value" type="text" id="b" maxlength="8" value=""\
+			placeholder="4">\
+			<a href="#" class="next"><i class="fa fa-angle-right fa-lg"></i></a>\
+			<a href="#" class="edit"><i class = "fa fa-pencil"></i></a>\
+			<input class="jscolor" value="#3A539B">\
+			</span>').insertAfter($("span.input.parameterized").last()).find("label.xt").html('&#92;( x_{' + ($("span.parameterized").length) + '}(t) &#92;)').parent("span")).find("label.yt").html('&#92;( y_{' + ($("span.parameterized").length) + '}(t) &#92;)');
 		}
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "parameters"]);
 		MathJax.Hub.Queue(function(){
@@ -868,21 +975,99 @@ $(document).ready(function(){
 			drawOnY(origin.x, origin.y, tys, 22);
 			drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
 			drawOnMinusY(origin.x, origin.y, tys, 22);
-			var k = 0;
+			
+			/*subdivide(-2, 2, 20, tab1);
+			console.log((tab1[tab1.length - 1] - tab1[0])/(tab1.length - 1));
+			tab2 = [];
+			tab2[0] = 2;
+			function F(t, y){
+				return y;
+			}
+			for(var i = 0; i < tab1.length - 1; i++){
+				tab2[i+1] = tab2[i] + ((tab1[tab1.length - 1] - tab1[0])/(tab1.length - 1))*F(tab1[i], tab2[i]);
+			}
+			console.log(tab2);
+			(new Curve2d(tab1, tab2, "#9B0000", 3)).draw();
+			
+			
+			
+			(new Curve2d(curves[0].X, curves[0].Y, curves[0].color, curves[0].width)).draw();
+			*/
+			duration = 1; //duration in milliseconds DONT DELETE
+			var k = 50;
+			//console.log(typeof(m))
+			if(typeof(m) == 'undefined'){
+				m = morphp(curves[1], curves[2], duration, k, 
+				function(){
+					context.clearRect(0, 0, cwidth, cheight);
+					context.setLineDash([]);
+					drawXAxis(origin.y, "#95A5A6");
+					drawYAxis(origin.x, "#95A5A6");
+					drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+					drawOnY(origin.x, origin.y, tys, 22);
+					drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+					drawOnMinusY(origin.x, origin.y, tys, 22);
+				},function(){
+					m = morphp(curves[2], curves[1], duration, k, 
+					function(){
+						context.clearRect(0, 0, cwidth, cheight);
+						context.setLineDash([]);
+						drawXAxis(origin.y, "#95A5A6");
+						drawYAxis(origin.x, "#95A5A6");
+						drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnY(origin.x, origin.y, tys, 22);
+						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnMinusY(origin.x, origin.y, tys, 22);
+					},function(){
+						console.log("Done");
+					});
+				});
+			}else{
+				window.clearInterval(m);
+				m = morphp(curves[1], curves[2], duration, k, 
+				function(){
+					context.clearRect(0, 0, cwidth, cheight);
+					context.setLineDash([]);
+					drawXAxis(origin.y, "#95A5A6");
+					drawYAxis(origin.x, "#95A5A6");
+					drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+					drawOnY(origin.x, origin.y, tys, 22);
+					drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+					drawOnMinusY(origin.x, origin.y, tys, 22);
+				},function(){
+					m = morphp(curves[2], curves[1], duration, k, 
+					function(){
+						context.clearRect(0, 0, cwidth, cheight);
+						context.setLineDash([]);
+						drawXAxis(origin.y, "#95A5A6");
+						drawYAxis(origin.x, "#95A5A6");
+						drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnY(origin.x, origin.y, tys, 22);
+						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnMinusY(origin.x, origin.y, tys, 22);
+					},function(){
+						console.log("Done");
+					});
+				});
+			}
 			//window.clearInterval(myint);
-			if(typeof(myint) == "undefined"){
+			/*if(typeof(myint) == "undefined"){
+				//console.log(curves[0].X[curves[0].X.length -1]);
+				//console.log(curves[0].Y[curves[0].Y.length -1]);
 				console.log("undefined case");
-				myint = window.setInterval(function(){
-					if(k < 11){
+				//myint = window.setInterval(function(){
+					/*if(k < 11){
 						if(k == 0){
 							for(var i = 0; i < curves[0].X.length; i++){
 								tab2[i] = curves[0].Y[i];
+								//tab2[i] = curves[curves.length - 1];
 							}
 						}
 						else{
 							for(var i = 0; i < curves[0].X.length; i++){
 								//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
 								tab2[i] = curves[1].Y[i] + (10 - k)*(curves[0].Y[i] - curves[1].Y[i])/10;
+								//tab2[i] = curves[0].Y[i] + (10 - k)*(curves[curves.length - 1].Y[i] - curves[0].Y[i])/10;
 							}
 						}						
 						//console.log(k);
@@ -896,30 +1081,30 @@ $(document).ready(function(){
 						drawOnMinusY(origin.x, origin.y, tys, 22);
 						console.log(tab2);
 						(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
-					}
-					else{
-						window.clearInterval(myint);	
-						tab2 = [];	
-					}
-					k++;
-				}, 150);
-			}else{
-				window.clearInterval(myint);
-				console.log("defined case");
-				console.log(tab2);
-				myint = window.setInterval(function(){
+						//(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+					}*/
+					/*tab1=[];
+					
 					if(k < 11){
 						if(k == 0){
 							for(var i = 0; i < curves[0].X.length; i++){
-								tab2[i] = curves[0].Y[i];
+								tab1[i] = curves[1].X[i];
+								tab2[i] = curves[1].Y[i];
+								//tab2[i] = curves[curves.length - 1];
 							}
 						}
 						else{
 							for(var i = 0; i < curves[0].X.length; i++){
 								//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
-								tab2[i] = curves[1].Y[i] + (10 - k)*(curves[0].Y[i] - curves[1].Y[i])/10;;
-							}						
-						}
+								//tab1[i] = curves[1].X[i] + k*(curves[0].X[curves[0].X.length - 1 - i] - curves[0].X[i])/10;
+								tab1[i] = k*(curves[0].X[curves[0].X.length - 1 - i] - curves[1].X[i])/10 + curves[1].X[i];
+								var ai = (curves[1].Y[i] - curves[0].Y[curves[0].Y.length - 1 - i])/(curves[1].X[i] - curves[0].X[curves[0].X.length - 1 - i]);
+								var bi = curves[1].Y[i] - ai*curves[1].X[i];
+								tab2[i] = ai*tab1[i] + bi;
+								//tab2[i] = curves[0].Y[i] + (10 - k)*(curves[curves.length - 1].Y[i] - curves[0].Y[i])/10;
+							}
+						}		
+						//console.log(curves[0].Y[curves[0].Y.length - 1]);		
 						//console.log(k);
 						context.clearRect(0, 0, cwidth, cheight);
 						context.setLineDash([]);
@@ -929,15 +1114,64 @@ $(document).ready(function(){
 						drawOnY(origin.x, origin.y, tys, 22);
 						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
 						drawOnMinusY(origin.x, origin.y, tys, 22);
-						console.log(tab2);
-						(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+						//(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+						(new Curve2d(tab1, tab2, curves[0].color, 3)).draw();
 					}
 					else{
-						window.clearInterval(myint);		
+						window.clearInterval(myint);	
+						tab2 = [];	
+						tab1 = [];
 					}
 					k++;
-				}, 150);
-			}
+				}, duration);
+				
+			}else{
+				window.clearInterval(myint);
+				console.log("defined case");
+				console.log(tab2);
+				myint = window.setInterval(function(){
+					tab1=[];
+					
+					if(k < 11){
+						if(k == 0){
+							for(var i = 0; i < curves[0].X.length; i++){
+								tab1[i] = curves[1].X[i];
+								tab2[i] = curves[1].Y[i];
+								//tab2[i] = curves[curves.length - 1];
+							}
+						}
+						else{
+							for(var i = 0; i < curves[0].X.length; i++){
+								//console.log((curves[0].Y)[i] + (curves[1].Y)[i])/2
+								//tab1[i] = curves[1].X[i] + k*(curves[0].X[curves[0].X.length - 1 - i] - curves[0].X[i])/10;
+								tab1[i] = k*(curves[0].X[curves[0].X.length - 1 - i] - curves[1].X[i])/10 + curves[1].X[i];
+								var ai = (curves[1].Y[i] - curves[0].Y[curves[0].Y.length - 1 - i])/(curves[1].X[i] - curves[0].X[curves[0].X.length - 1 - i]);
+								var bi = curves[1].Y[i] - ai*curves[1].X[i];
+								tab2[i] = ai*tab1[i] + bi;
+								//tab2[i] = curves[0].Y[i] + (10 - k)*(curves[curves.length - 1].Y[i] - curves[0].Y[i])/10;
+							}
+						}		
+						//console.log(curves[0].Y[curves[0].Y.length - 1]);		
+						//console.log(k);
+						context.clearRect(0, 0, cwidth, cheight);
+						context.setLineDash([]);
+						drawXAxis(origin.y, "#95A5A6");
+						drawYAxis(origin.x, "#95A5A6");
+						drawOnX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnY(origin.x, origin.y, tys, 22);
+						drawOnMinusX(origin.x, origin.y, txs, cwidth/thestep);
+						drawOnMinusY(origin.x, origin.y, tys, 22);
+						//(new Curve2d(curves[0].X, tab2, "#3A539B", 3)).draw();
+						(new Curve2d(tab1, tab2, curves[0].color, 3)).draw();
+					}
+					else{
+						window.clearInterval(myint);	
+						tab2 = [];	
+						tab1 = [];
+					}
+					k++;
+				}, duration);
+			}*/
 		});
 	});
 	$("a#save").click(function(){
@@ -1349,6 +1583,39 @@ $(document).ready(function(){
 		$("div#parameters").children("span").children("a.dropdown").show();
 		curves[current_index].width = $("span.scontainer").index($("span.scontainer.selected")) + 2;
 	});
+	reg = new RegExp(/(.*)\.(.*)/); //DO NOT DELETE, Used to match duration expressions
+	$("body").on("keypress", "div#fsettings input#duration", function(e){
+		//console.log($(this).val());
+		//console.log(e.which);
+		//if( != ){}
+		if(e.which == 46 && $(this).val().indexOf(".") != -1){
+			e.preventDefault();
+		}
+		else{
+			if((e.which >=48 && e.which <= 57) || e.which == 8 || e.which == 46 || e.which == 0){
+
+			}else{
+				e.preventDefault();
+			}
+		}
+		/*if(e.which == 46 && $(this).val().indexOf(".") != -1){
+			e.preventDefault();
+		}
+		else{
+			if($(this).val().match(reg)[2].length == 3){
+				e.preventDefault();
+			}
+			else{
+				
+			}
+		}*/	
+	});
+	$("body").on("keyup", "div#fsettings input#duration", function(e){
+		//console.log($(this).val());
+	});
+	$("body").on("paste", "div#fsettings input#duration", function(e){
+		e.preventDefault();
+	})
 	$("body").on("click", "span.input.function a.edit, span.input.parameterized a.edit", function(){
 		$(this).parent().siblings().children("a.save").hide();
 		$(this).parent().siblings().children("a.save").siblings("a.edit").show();
@@ -1400,7 +1667,7 @@ $(document).ready(function(){
 				tab2[i] = eval(evaluateInput($($("span.input")[current_index]).children("input.y").val()));
 			}	
 		}
-		console.log(a);
+		//console.log(a);
 		curves[current_index].X = tab1;
 		curves[current_index].Y = tab2;
 		tab1 = [];
@@ -1414,11 +1681,21 @@ $(document).ready(function(){
 		//Current selected input index 
 		var inp = $($(this).parent()).children("a.next").index($(this));
 		index = $("span.input").index($(this).parent());
-		if(inp == 1){
-			P.a[index] = parseFloat($("input.selected").val());
+		if($(this).parent().hasClass("function")){
+			if(inp == 1){
+				P.a[index] = parseFloat($("input.selected").val());
+			}
+			if(inp == 2){
+				P.b[index] = parseFloat($("input.selected").val());
+			}	
 		}
-		if(inp == 2){
-			P.b[index] = parseFloat($("input.selected").val());
+		else{
+			if(inp == 2){
+				P.a[index] = parseFloat($("input.selected").val());
+			}
+			if(inp == 3){
+				P.b[index] = parseFloat($("input.selected").val());
+			}
 		}
 		$("span.input").children("input").removeClass("selected");
 		$(this).hide();
@@ -1443,6 +1720,7 @@ $(document).ready(function(){
 			$($(this).parent().children("input")[$(this).parent().children("a.next").index($(this)) + 1]).addClass("selected");
 			$($($(this).parent().children("input"))[$(this).parent().children("a.next").index($(this)) + 1]).focus();
 		}
+		//console.log(P.a);
 	});
 	$("body").on("click", "span.input a.previous, span.input.parameterized a.previous", function(){
 		$(this).parent().children("input").removeClass("selected");
@@ -1489,6 +1767,7 @@ $(document).ready(function(){
 	});
 	$("body").on("change", ".jscolor",function(){
 		curves[$("span.input").index($(this).parent())].color = "#" + $(this).val();
+		console.log($(this).val());
 	})
 	$("a#center").hover(function(){
 		$("span#label").text("Center").show();
@@ -1496,6 +1775,7 @@ $(document).ready(function(){
 		$("span#label").hide();
 	});
 	$("a#center").click(function(){
+		$("div#parameters").scrollLeft(($("span.input").width())*($("span.input").length) + 20);
 		topcontext.clearRect(0, 0, cwidth, cheight);
 		c = 0, e = 0;
 		origin.x = cwidth/2;
